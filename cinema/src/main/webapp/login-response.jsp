@@ -1,6 +1,6 @@
 <html>
 
-<head><title>Confirmation</title></head>
+<head><title>Login confirmation</title></head>
 
 <body>
 

@@ -18,4 +18,8 @@
 *.zip
 *.tar.gz
 *.rar
-/target/
+*.classpath
+*.project
+*.settings
+eclipse-workspace/
+target/
