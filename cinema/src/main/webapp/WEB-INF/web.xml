@@ -4,4 +4,15 @@
 
 <web-app>
   <display-name>Archetype Created Web Application</display-name>
+  <servlet>
+  	<servlet-name>CinemaControllerServlet</servlet-name>
+  	<display-name>CinemaControllerServlet</display-name>
+  	<description></description>
+  	<servlet-class>controller.CinemaControllerServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+  	<servlet-name>CinemaControllerServlet</servlet-name>
+  	<url-pattern>/CinemaControllerServlet</url-pattern>
+  </servlet-mapping>
+  
 </web-app>
