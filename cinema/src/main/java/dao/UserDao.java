@@ -1,5 +1,6 @@
 package dao;
 
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.security.MessageDigest;
@@ -63,7 +64,15 @@ public class UserDao {
 		obj.put("users", users);
 		try {
 			FileWriter file = new FileWriter(path);
+			System.out.println(obj.toJSONString());
 			file.write(obj.toJSONString());
+			
+			file.flush();
+			file.close();
+			JSONArray u = getUsers();
+			obj = new JSONObject();
+			obj.put("users",  u);
+			System.out.println(obj.toJSONString());
 		}
 		catch(Exception e) {
 			e.printStackTrace();
@@ -74,7 +83,9 @@ public class UserDao {
 		try{
 			JSONObject obj = new JSONObject();
 			JSONParser parser = new JSONParser();
-			obj = (JSONObject)parser.parse(path);
+			FileReader fileReader = new FileReader(path);
+			obj = (JSONObject)parser.parse(fileReader);
+			fileReader.close();
 			JSONArray users = (JSONArray)obj.get("users");
 			return users;
 		}
