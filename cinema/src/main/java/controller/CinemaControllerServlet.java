@@ -29,6 +29,7 @@ public class CinemaControllerServlet extends HttpServlet {
 	public void init() throws ServletException {
 		super.init();
 		userService = new UserService();
+		System.out.println(System.getProperty("java.class.path"));
 	}
 	
     public CinemaControllerServlet() {
@@ -41,6 +42,7 @@ public class CinemaControllerServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String command = request.getParameter("command");
+		System.out.println(System.getProperty("java.class.path"));
 		String username = (String)request.getServletContext().getAttribute("username");
 		switch(command) {
 			case "LOGIN": handleLoginRequest(request, response);

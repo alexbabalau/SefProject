@@ -8,6 +8,7 @@ public class UserService {
 	
 	public UserService() {
 		userDao = new UserDao();
+		userDao.addUser("alex", "alex", "admin");
 	}
 	
 	public boolean areValidCredentials(String username, String password) {
