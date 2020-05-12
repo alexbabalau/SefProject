@@ -23,6 +23,7 @@ public class CinemaControllerServlet extends HttpServlet {
      */
 	
 	private UserService userService;
+	private RequestService requestService;
 	private ServletContext servletContext;
 	
 	@Override
@@ -30,6 +31,7 @@ public class CinemaControllerServlet extends HttpServlet {
 		super.init();
 		userService = new UserService();
 		
+		userService.addUser("admin", "admin", "admin");
 	}
 	
     public CinemaControllerServlet() {
@@ -41,11 +43,17 @@ public class CinemaControllerServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		userService.addUser("daria", "bobi", "regular");
+		userService.addUser("bobi", "pet", "manager");
+		
 		String command = request.getParameter("command");
 		String username = (String)request.getServletContext().getAttribute("username");
+		
 		switch(command) {
 			case "LOGIN": handleLoginRequest(request, response);
 						  break;
+			case "REGISTER": handleRegisterRequest(request, response);
+							break;
 		}
 	}
 
@@ -70,6 +78,30 @@ public class CinemaControllerServlet extends HttpServlet {
 			requestDispatcher = request.getRequestDispatcher("login-form.html");
 		requestDispatcher.forward(request, response);
 		
+	}
+	
+	private void handleRegisterRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		RequestDispatcher requestDispatcher = null;
+		
+		String username = request.getParameter("username");
+		String password = request.getParameter("password");
+		String name = request.getParameter("name");
+		String phone = request.getParameter("phone");
+		String email = request.getParameter("email");
+		String role = request.getParameter("role");
+		String cinemaName = request.getParameter("cinemaName");
+
+		if (!userService.existUser(username)) {
+			switch(role) {
+				case "manager" : requestService.add(new Manager(username, password, phone, name, email, cinemaName));
+					break;
+				case "regular" : userService.addUser(new Regular(username, password, phone, name, email));;
+					break;		
+			}
+		}
+		
+		requestDispatcher = request.getRequestDispatcher("login-form.html");
+		requestDispatcher.forward(request, response);
 	}
 
 	/**
