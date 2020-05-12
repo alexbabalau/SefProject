@@ -5,6 +5,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Iterator;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -21,7 +22,7 @@ public class UserDao {
 		
 	}
 	
-	private String getPasswordEncrypted(String passwordToHash) {
+	public String getPasswordEncrypted(String passwordToHash) {
         String generatedPassword = null;
         try {
             
@@ -52,7 +53,7 @@ public class UserDao {
 		obj.put("password", password);
 		obj.put("role", role);
 		
-		JSONArray users = getUsers();
+		JSONArray users = getUsersJSON();
 		
 		users.add(obj);
 		
@@ -64,22 +65,19 @@ public class UserDao {
 		obj.put("users", users);
 		try {
 			FileWriter file = new FileWriter(path);
-			System.out.println(obj.toJSONString());
+			
 			file.write(obj.toJSONString());
 			
 			file.flush();
 			file.close();
-			JSONArray u = getUsers();
-			obj = new JSONObject();
-			obj.put("users",  u);
-			System.out.println(obj.toJSONString());
+			
 		}
 		catch(Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
-	private JSONArray getUsers() {
+	private JSONArray getUsersJSON() {
 		try{
 			JSONObject obj = new JSONObject();
 			JSONParser parser = new JSONParser();
@@ -98,6 +96,36 @@ public class UserDao {
 		return null;
 	}
 	
+	private JSONObject getUser(String username) {
+		JSONArray users = getUsersJSON();
+		Iterator<JSONObject> iterator = users.iterator();
+		while(iterator.hasNext()) {
+			JSONObject obj = iterator.next();
+			if(((String)obj.get("username")).equals(username)){
+				return obj;
+			}
+		}
+		return null;
+	}
 	
+	public String getRole(String username) {
+		
+		JSONObject obj = getUser(username);
+		
+		if(obj == null)
+			return null;
+		
+		return (String)obj.get("role");
+	}
+	
+	public String getPassword(String username) {
+		
+		JSONObject obj = getUser(username);
+		
+		if(obj == null)
+			return null;
+		
+		return (String)obj.get("password");
+	}
 	
 }

@@ -29,7 +29,7 @@ public class CinemaControllerServlet extends HttpServlet {
 	public void init() throws ServletException {
 		super.init();
 		userService = new UserService();
-		System.out.println(System.getProperty("java.class.path"));
+		
 	}
 	
     public CinemaControllerServlet() {
@@ -42,7 +42,6 @@ public class CinemaControllerServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String command = request.getParameter("command");
-		System.out.println(System.getProperty("java.class.path"));
 		String username = (String)request.getServletContext().getAttribute("username");
 		switch(command) {
 			case "LOGIN": handleLoginRequest(request, response);
@@ -51,14 +50,12 @@ public class CinemaControllerServlet extends HttpServlet {
 	}
 
 	private void handleLoginRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
 		RequestDispatcher requestDispatcher = null;
 		String username = request.getParameter("username");
-		System.out.println(username);
 		if(userService.areValidCredentials(request.getParameter("username"), request.getParameter("password"))) {
-			System.out.println(username);
+			
 			request.getServletContext().setAttribute("username", request.getParameter("username"));
-			System.out.println(username);
+			
 			switch(userService.getRole(username)) {
 				case "admin": requestDispatcher = request.getRequestDispatcher("admin-requests.jsp");
 							  break;

@@ -8,18 +8,19 @@ public class UserService {
 	
 	public UserService() {
 		userDao = new UserDao();
-		userDao.addUser("alex", "alex", "admin");
+	}
+	
+	public void addUser(String username, String password, String role) {
+		userDao.addUser(username, password, role);
 	}
 	
 	public boolean areValidCredentials(String username, String password) {
-		return username.equals(password);
+		String passwordEncrypted = userDao.getPasswordEncrypted(password);
+		String userPassword = userDao.getPassword(username);
+		return passwordEncrypted.equals(userPassword);
 	}
 	
 	public String getRole(String username) {
-		if(username.equals("admin"))
-			return "admin";
-		if(username.equals("manager"))
-			return "manager";
-		return "regular";
+		return userDao.getRole(username);
 	}
 }
