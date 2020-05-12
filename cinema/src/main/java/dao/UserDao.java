@@ -15,13 +15,19 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import model.Admin;
+import model.Manager;
+import model.Regular;
+import model.User;
+
 public class UserDao {
 	
 	
 	
 	private final String path = "users5.json";
 	private File myFile;
-	public UserDao() {
+	public static UserDao instance = null;
+	private UserDao() {
 		myFile = new File(path);
 		try {
 			myFile.createNewFile();
@@ -29,6 +35,13 @@ public class UserDao {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	public static UserDao getInstance() {
+		if(instance == null) {
+			instance = new UserDao();
+		}
+		return instance;
 	}
 	
 	public String getPasswordEncrypted(String passwordToHash) {
@@ -54,62 +67,58 @@ public class UserDao {
         return generatedPassword;
 	}
 	
-	public void addUser(String username, String password, String role){
-		password = getPasswordEncrypted(password);
-		System.out.println(username + " " + password);
+	public void addUser(User user){
+		String password = getPasswordEncrypted(user.getPassword());
+		System.out.println(user.getUsername() + " " + password);
 		JSONObject obj = new JSONObject();
-		obj.put("username", username);
+		obj.put("username", user.getUsername());
 		obj.put("password", password);
-		obj.put("role", role);
-		
-		JSONArray users = getUsersJSON();
+		obj.put("role", user.getRole());
+		obj.put("phone", user.getPhone());
+		obj.put("email", user.getEmail());
+		obj.put("name", user.getName());
+		obj.put("cinema", user.getCinema());
+		JSONArray users = JSONUtils.getEntriesJSON(path);
 		
 		users.add(obj);
 		
-		persistUsers(users);
+		JSONUtils.persistEntries(users, path);
 	}
 	
-	private void persistUsers(JSONArray users){
-		JSONObject obj = new JSONObject();
-		obj.put("users", users);
-		try {
-			FileWriter file = new FileWriter(path);
+	public boolean existUser(String username) {
+		JSONArray users = JSONUtils.getEntriesJSON(path);
+		Iterator<JSONObject> iterator = users.iterator();
+		
+		while(iterator.hasNext()) {
+			JSONObject next = iterator.next();
 			
-			file.write(obj.toJSONString());
-			
-			file.flush();
-			file.close();
-			
+			if(next.get("username").equals(username)) {
+				return true;
+			}
 		}
-		catch(Exception e) {
-			e.printStackTrace();
-		}
+		return false;
 	}
 	
-	private JSONArray getUsersJSON() {
-		try{
-			JSONObject obj = new JSONObject();
-			JSONParser parser = new JSONParser();
-			
-			FileReader fileReader = new FileReader(path);
-			
-			obj = (JSONObject)parser.parse(fileReader);
-			
-			fileReader.close();
-			JSONArray users = (JSONArray)obj.get("users");
-			return users;
+	
+	
+	
+	
+	public User selectByUsername(String username) {
+		JSONObject user = getUser(username);
+		if(((String)user.get("role")).equals("admin")) {
+			return new Admin((String)user.get("username"), (String)user.get("password"), (String)user.get("phone"), (String)user.get("name"), (String)user.get("email"));
 		}
-		catch(ParseException e) {
-			return new JSONArray();
+		if(((String)user.get("role")).equals("manager")) {
+			return new Manager((String)user.get("username"), (String)user.get("password"), (String)user.get("phone"), (String)user.get("name"), (String)user.get("email"), (String)user.get("cinema"));
 		}
-		catch(Exception e) {
-			e.printStackTrace();
+		if(((String)user.get("role")).equals("regular")) {
+			return new Regular((String)user.get("username"), (String)user.get("password"), (String)user.get("phone"), (String)user.get("name"), (String)user.get("email"));
 		}
 		return null;
 	}
 	
 	private JSONObject getUser(String username) {
-		JSONArray users = getUsersJSON();
+		JSONArray users = JSONUtils.getEntriesJSON(path);
 		Iterator<JSONObject> iterator = users.iterator();
 		while(iterator.hasNext()) {
 			JSONObject obj = iterator.next();

@@ -10,6 +10,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import model.Admin;
+import model.Manager;
+import model.Regular;
+import service.RequestService;
 import service.UserService;
 
 /**
@@ -30,8 +34,10 @@ public class CinemaControllerServlet extends HttpServlet {
 	public void init() throws ServletException {
 		super.init();
 		userService = new UserService();
-		
-		userService.addUser("admin", "admin", "admin");
+
+		requestService = new RequestService();
+		userService.addUser(new Admin("admin", "admin", "07xxxxxx", "Admin", "admin@admin.ro"));
+
 	}
 	
     public CinemaControllerServlet() {
@@ -43,8 +49,6 @@ public class CinemaControllerServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		userService.addUser("daria", "bobi", "regular");
-		userService.addUser("bobi", "pet", "manager");
 		
 		String command = request.getParameter("command");
 		String username = (String)request.getServletContext().getAttribute("username");
@@ -93,7 +97,7 @@ public class CinemaControllerServlet extends HttpServlet {
 
 		if (!userService.existUser(username)) {
 			switch(role) {
-				case "manager" : requestService.add(new Manager(username, password, phone, name, email, cinemaName));
+				case "manager" : requestService.addRequest(new Manager(username, password, phone, name, email, cinemaName));
 					break;
 				case "regular" : userService.addUser(new Regular(username, password, phone, name, email));;
 					break;		
@@ -115,6 +119,7 @@ public class CinemaControllerServlet extends HttpServlet {
 	@Override
 	public void destroy() {
 		userService.close();
+		requestService.close();
 	}
 
 	
