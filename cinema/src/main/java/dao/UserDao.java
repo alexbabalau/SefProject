@@ -15,6 +15,11 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import model.Admin;
+import model.Manager;
+import model.Regular;
+import model.User;
+
 public class UserDao {
 	
 	
@@ -54,19 +59,36 @@ public class UserDao {
         return generatedPassword;
 	}
 	
-	public void addUser(String username, String password, String role){
-		password = getPasswordEncrypted(password);
-		System.out.println(username + " " + password);
+	public void addUser(User user){
+		String password = getPasswordEncrypted(user.getPassword());
+		System.out.println(user.getUsername() + " " + password);
 		JSONObject obj = new JSONObject();
-		obj.put("username", username);
+		obj.put("username", user.getUsername());
 		obj.put("password", password);
-		obj.put("role", role);
-		
+		obj.put("role", user.getRole());
+		obj.put("phone", user.getPhone());
+		obj.put("email", user.getEmail());
+		obj.put("name", user.getName());
+		obj.put("cinema", user.getCinema());
 		JSONArray users = getUsersJSON();
 		
 		users.add(obj);
 		
 		persistUsers(users);
+	}
+	
+	public boolean existUser(String username) {
+		JSONArray users = getUsersJSON();
+		Iterator<JSONObject> iterator = users.iterator();
+		
+		while(iterator.hasNext()) {
+			JSONObject next = iterator.next();
+			
+			if(next.get("username").equals(username)) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	private void persistUsers(JSONArray users){
@@ -104,6 +126,20 @@ public class UserDao {
 		}
 		catch(Exception e) {
 			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public User selectByUsername(String username) {
+		JSONObject user = getUser(username);
+		if(((String)user.get("role")).equals("admin")) {
+			return new Admin((String)user.get("username"), (String)user.get("password"), (String)user.get("phone"), (String)user.get("name"), (String)user.get("email"));
+		}
+		if(((String)user.get("role")).equals("manager")) {
+			return new Manager((String)user.get("username"), (String)user.get("password"), (String)user.get("phone"), (String)user.get("name"), (String)user.get("email"), (String)user.get("cinema"));
+		}
+		if(((String)user.get("role")).equals("regular")) {
+			return new Regular((String)user.get("username"), (String)user.get("password"), (String)user.get("phone"), (String)user.get("name"), (String)user.get("email"));
 		}
 		return null;
 	}

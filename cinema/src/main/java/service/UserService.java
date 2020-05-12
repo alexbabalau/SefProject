@@ -1,6 +1,7 @@
 package service;
 
 import dao.UserDao;
+import model.User;
 
 public class UserService {
 	
@@ -10,8 +11,12 @@ public class UserService {
 		userDao = new UserDao();
 	}
 	
-	public void addUser(String username, String password, String role) {
-		userDao.addUser(username, password, role);
+	public boolean existUser(String username) {
+		return userDao.existUser(username);
+	}
+	
+	public void addUser(User user) {
+		userDao.addUser(user);
 	}
 	
 	public boolean areValidCredentials(String username, String password) {
@@ -21,7 +26,7 @@ public class UserService {
 	}
 	
 	public String getRole(String username) {
-		return userDao.getRole(username);
+		return userDao.selectByUsername(username).getRole();
 	}
 	
 	public void close() {

@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import model.Admin;
 import service.UserService;
 
 /**
@@ -29,7 +30,7 @@ public class CinemaControllerServlet extends HttpServlet {
 	public void init() throws ServletException {
 		super.init();
 		userService = new UserService();
-		
+		userService.addUser(new Admin("admin", "admin", "07xxxxxx", "Admin", "admin@admin.ro"));
 	}
 	
     public CinemaControllerServlet() {
