@@ -69,7 +69,7 @@ public class UserDao {
 	
 	public void addUser(User user){
 		String password = getPasswordEncrypted(user.getPassword());
-		System.out.println(user.getUsername() + " " + password);
+		
 		JSONObject obj = new JSONObject();
 		obj.put("username", user.getUsername());
 		obj.put("password", password);
