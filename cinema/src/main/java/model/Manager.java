@@ -15,6 +15,8 @@ public class Manager extends User{
 		return cinema;
 	}
 	
+	
+	
 	@Override
 	public String getRole() {
 		return "manager";

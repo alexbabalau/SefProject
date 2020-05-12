@@ -26,7 +26,8 @@ public class UserDao {
 	
 	private final String path = "users5.json";
 	private File myFile;
-	public UserDao() {
+	public static UserDao instance = null;
+	private UserDao() {
 		myFile = new File(path);
 		try {
 			myFile.createNewFile();
@@ -34,6 +35,13 @@ public class UserDao {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+	
+	public static UserDao getInstance() {
+		if(instance == null) {
+			instance = new UserDao();
+		}
+		return instance;
 	}
 	
 	public String getPasswordEncrypted(String passwordToHash) {
@@ -70,15 +78,15 @@ public class UserDao {
 		obj.put("email", user.getEmail());
 		obj.put("name", user.getName());
 		obj.put("cinema", user.getCinema());
-		JSONArray users = getUsersJSON();
+		JSONArray users = JSONUtils.getEntriesJSON(path);
 		
 		users.add(obj);
 		
-		persistUsers(users);
+		JSONUtils.persistEntries(users, path);
 	}
 	
 	public boolean existUser(String username) {
-		JSONArray users = getUsersJSON();
+		JSONArray users = JSONUtils.getEntriesJSON(path);
 		Iterator<JSONObject> iterator = users.iterator();
 		
 		while(iterator.hasNext()) {
@@ -91,44 +99,9 @@ public class UserDao {
 		return false;
 	}
 	
-	private void persistUsers(JSONArray users){
-		JSONObject obj = new JSONObject();
-		obj.put("users", users);
-		try {
-			FileWriter file = new FileWriter(path);
-			
-			file.write(obj.toJSONString());
-			
-			file.flush();
-			file.close();
-			
-		}
-		catch(Exception e) {
-			e.printStackTrace();
-		}
-	}
 	
-	private JSONArray getUsersJSON() {
-		try{
-			JSONObject obj = new JSONObject();
-			JSONParser parser = new JSONParser();
-			
-			FileReader fileReader = new FileReader(path);
-			
-			obj = (JSONObject)parser.parse(fileReader);
-			
-			fileReader.close();
-			JSONArray users = (JSONArray)obj.get("users");
-			return users;
-		}
-		catch(ParseException e) {
-			return new JSONArray();
-		}
-		catch(Exception e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
+	
+	
 	
 	public User selectByUsername(String username) {
 		JSONObject user = getUser(username);
@@ -145,7 +118,7 @@ public class UserDao {
 	}
 	
 	private JSONObject getUser(String username) {
-		JSONArray users = getUsersJSON();
+		JSONArray users = JSONUtils.getEntriesJSON(path);
 		Iterator<JSONObject> iterator = users.iterator();
 		while(iterator.hasNext()) {
 			JSONObject obj = iterator.next();

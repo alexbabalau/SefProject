@@ -8,7 +8,7 @@ public class UserService {
 	private UserDao userDao;
 	
 	public UserService() {
-		userDao = new UserDao();
+		userDao = UserDao.getInstance();
 	}
 	
 	public boolean existUser(String username) {

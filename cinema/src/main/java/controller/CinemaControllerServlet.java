@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import model.Admin;
+import service.RequestService;
 import service.UserService;
 
 /**
@@ -24,12 +25,14 @@ public class CinemaControllerServlet extends HttpServlet {
      */
 	
 	private UserService userService;
+	private RequestService requestService;
 	private ServletContext servletContext;
 	
 	@Override
 	public void init() throws ServletException {
 		super.init();
 		userService = new UserService();
+		requestService = new RequestService();
 		userService.addUser(new Admin("admin", "admin", "07xxxxxx", "Admin", "admin@admin.ro"));
 	}
 	
@@ -84,6 +87,7 @@ public class CinemaControllerServlet extends HttpServlet {
 	@Override
 	public void destroy() {
 		userService.close();
+		requestService.close();
 	}
 
 	
