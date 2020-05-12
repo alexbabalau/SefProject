@@ -1,8 +1,11 @@
 package dao;
 
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Iterator;
@@ -16,10 +19,16 @@ public class UserDao {
 	
 	
 	
-	private final String path = "/user.json";
-	
+	private final String path = "users5.json";
+	private File myFile;
 	public UserDao() {
-		
+		myFile = new File(path);
+		try {
+			myFile.createNewFile();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	
 	public String getPasswordEncrypted(String passwordToHash) {
@@ -81,8 +90,11 @@ public class UserDao {
 		try{
 			JSONObject obj = new JSONObject();
 			JSONParser parser = new JSONParser();
+			
 			FileReader fileReader = new FileReader(path);
+			
 			obj = (JSONObject)parser.parse(fileReader);
+			
 			fileReader.close();
 			JSONArray users = (JSONArray)obj.get("users");
 			return users;
@@ -126,6 +138,10 @@ public class UserDao {
 			return null;
 		
 		return (String)obj.get("password");
+	}
+	
+	public void close() {
+		myFile.delete();
 	}
 	
 }

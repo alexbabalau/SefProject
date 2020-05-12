@@ -23,4 +23,8 @@ public class UserService {
 	public String getRole(String username) {
 		return userDao.getRole(username);
 	}
+	
+	public void close() {
+		userDao.close();
+	}
 }
