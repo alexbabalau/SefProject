@@ -25,8 +25,7 @@ Gitignore for Java,maven,Eclipse,Spring
 .springBeans
 .sts4-cache
 
-.settings/org.eclipse.core.resources.prefs
-.settings/org.eclipse.jdt.core.prefs
+.settings/*
 
 # Created by https://www.gitignore.io/api/git,java,maven,eclipse,windows
 
