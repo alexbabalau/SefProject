@@ -7,5 +7,4 @@
 	User <%= request.getParameter("username") %> is now logged in.
 
 </body>
-
 </html>

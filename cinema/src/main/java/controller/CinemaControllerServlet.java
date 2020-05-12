@@ -3,7 +3,9 @@ package controller;
 import java.io.IOException;
 
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -21,10 +23,13 @@ public class CinemaControllerServlet extends HttpServlet {
      */
 	
 	private UserService userService;
+	private ServletContext servletContext;
 	
 	@Override
-	public void init() {
+	public void init() throws ServletException {
+		super.init();
 		userService = new UserService();
+		
 	}
 	
     public CinemaControllerServlet() {
@@ -37,7 +42,7 @@ public class CinemaControllerServlet extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String command = request.getParameter("command");
-		
+		String username = (String)request.getServletContext().getAttribute("username");
 		switch(command) {
 			case "LOGIN": handleLoginRequest(request, response);
 						  break;
@@ -45,11 +50,22 @@ public class CinemaControllerServlet extends HttpServlet {
 	}
 
 	private void handleLoginRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
 		RequestDispatcher requestDispatcher = null;
-		
-		if(userService.areValidCredentials(request.getParameter("username"), request.getParameter("password")))
-			requestDispatcher = request.getRequestDispatcher("login-response.jsp");
+		String username = request.getParameter("username");
+		if(userService.areValidCredentials(request.getParameter("username"), request.getParameter("password"))) {
+			
+			request.getServletContext().setAttribute("username", request.getParameter("username"));
+			
+			switch(userService.getRole(username)) {
+				case "admin": requestDispatcher = request.getRequestDispatcher("admin-requests.jsp");
+							  break;
+				case "manager" :requestDispatcher = request.getRequestDispatcher("manager-movies.jsp");
+								break;
+				default: requestDispatcher = request.getRequestDispatcher("select-cinema.jsp");
+				
+			}
+		}
+			
 		else
 			requestDispatcher = request.getRequestDispatcher("login-form.html");
 		requestDispatcher.forward(request, response);

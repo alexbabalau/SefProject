@@ -177,6 +177,7 @@ $RECYCLE.BIN/
 *.lnk
 
 
+<<<<<<< HEAD
 # End of https://www.gitignore.io/api/git,java,maven,eclipse,windows
 @ivanrododendro
 ivanrododendro commented on 30 Sep 2019
@@ -204,3 +205,6 @@ API
 Training
 Blog
 About
+=======
+# End of https://www.gitignore.io/api/git,java,maven,eclipse,windows
+>>>>>>> branch 'loginBranch2' of https://github.com/alexbabalau/SefProject
