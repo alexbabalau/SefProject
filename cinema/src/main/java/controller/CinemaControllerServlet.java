@@ -79,6 +79,11 @@ public class CinemaControllerServlet extends HttpServlet {
 		// TODO Auto-generated method stub
 		doGet(request, response);
 	}
+	
+	@Override
+	public void destroy() {
+		userService.close();
+	}
 
 	
 }
