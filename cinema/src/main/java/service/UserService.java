@@ -30,6 +30,10 @@ public class UserService {
 		return userDao.selectByUsername(username).getRole();
 	}
 	
+	public String getCinema(String username) {
+		return userDao.selectByUsername(username).getCinema();
+	}
+	
 	public void close() {
 		userDao.close();
 	}

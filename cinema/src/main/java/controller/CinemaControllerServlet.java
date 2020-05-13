@@ -1,6 +1,8 @@
 package controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
@@ -12,7 +14,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import model.Admin;
 import model.Manager;
+import model.Movie;
 import model.Regular;
+import service.MovieService;
 import service.RequestService;
 import service.UserService;
 
@@ -28,16 +32,17 @@ public class CinemaControllerServlet extends HttpServlet {
 	
 	private UserService userService;
 	private RequestService requestService;
+	private MovieService movieService;
 	private ServletContext servletContext;
 	
 	@Override
 	public void init() throws ServletException {
 		super.init();
 		userService = new UserService();
+		movieService = new MovieService();
 
 		requestService = new RequestService();
 		userService.addUser(new Admin("admin", "admin", "07xxxxxx", "Admin", "admin@admin.ro"), false);
-
 	}
 	
     public CinemaControllerServlet() {
