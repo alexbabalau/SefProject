@@ -6,6 +6,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Iterator;
@@ -24,11 +27,16 @@ public class UserDao {
 	
 	
 	
-	private final String path = "users5.json";
+	private String path = "users5.json";
 	private File myFile;
 	public static UserDao instance = null;
 	private UserDao() {
+		String currentDir = System.getProperty("user.home");
+		path = currentDir + System.getProperty("file.separator") + path;
 		myFile = new File(path);
+		if(myFile.exists())
+			myFile.delete();
+		System.out.println(myFile.getAbsolutePath());
 		try {
 			myFile.createNewFile();
 		} catch (IOException e) {
@@ -44,31 +52,12 @@ public class UserDao {
 		return instance;
 	}
 	
-	public String getPasswordEncrypted(String passwordToHash) {
-        String generatedPassword = null;
-        try {
-            
-            MessageDigest md = MessageDigest.getInstance("MD5");
-            
-            md.update(passwordToHash.getBytes());
-             
-            byte[] bytes = md.digest();
-            
-            StringBuilder sb = new StringBuilder();
-            for(int i = 0; i< bytes.length; i++){
-                sb.append(Integer.toString((bytes[i] & 0xff) + 0x100, 16).substring(1));
-            }
-            
-            generatedPassword = sb.toString();
-        } 
-        catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-        return generatedPassword;
-	}
 	
-	public void addUser(User user){
-		String password = getPasswordEncrypted(user.getPassword());
+	
+	public void addUser(User user, boolean isEncrypted){
+		String password = user.getPassword();
+		if(!isEncrypted)
+			password = PasswordUtils.getPasswordEncrypted(password);
 		System.out.println(user.getUsername() + " " + password);
 		JSONObject obj = new JSONObject();
 		obj.put("username", user.getUsername());

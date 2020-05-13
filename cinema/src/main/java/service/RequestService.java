@@ -1,5 +1,7 @@
 package service;
 
+import java.util.List;
+
 import dao.RequestDao;
 import dao.UserDao;
 import model.Manager;
@@ -21,7 +23,7 @@ public class RequestService {
 	
 	public void approveRequest(String username) {
 		Manager approvedManager = requestDao.findRequest(username);
-		userDao.addUser(approvedManager);
+		userDao.addUser(approvedManager, false);
 		requestDao.deleteRequest(username);
 	}
 	
@@ -31,5 +33,9 @@ public class RequestService {
 	
 	public void close() {
 		requestDao.close();
+	}
+	
+	public List<Manager> getRequests(){
+		return requestDao.getRequests();
 	}
 }

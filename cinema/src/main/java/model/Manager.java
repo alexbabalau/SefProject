@@ -18,6 +18,13 @@ public class Manager extends User{
 	
 	
 	@Override
+	public String toString() {
+		return "Manager [cinema=" + cinema + ", getCinema()=" + getCinema() + ", getRole()=" + getRole()
+				+ ", getUsername()=" + getUsername() + ", getPassword()=" + getPassword() + ", getEmail()=" + getEmail()
+				+ ", getPhone()=" + getPhone() + ", getName()=" + getName() + "]";
+	}
+
+	@Override
 	public String getRole() {
 		return "manager";
 	}

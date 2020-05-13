@@ -1,5 +1,6 @@
 package service;
 
+import dao.PasswordUtils;
 import dao.UserDao;
 import model.User;
 
@@ -15,12 +16,12 @@ public class UserService {
 		return userDao.existUser(username);
 	}
 	
-	public void addUser(User user) {
-		userDao.addUser(user);
+	public void addUser(User user, boolean isEncrypted) {
+		userDao.addUser(user, isEncrypted);
 	}
 	
 	public boolean areValidCredentials(String username, String password) {
-		String passwordEncrypted = userDao.getPasswordEncrypted(password);
+		String passwordEncrypted = PasswordUtils.getPasswordEncrypted(password);
 		String userPassword = userDao.getPassword(username);
 		return passwordEncrypted.equals(userPassword);
 	}
