@@ -13,11 +13,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import model.Admin;
+import model.Booking;
 import model.Manager;
 import model.Movie;
 import model.Regular;
 import service.BookingService;
 import service.MovieService;
+import service.NotEnoughSeatsException;
 import service.RequestService;
 import service.UserService;
 
@@ -220,9 +222,9 @@ public class CinemaControllerServlet extends HttpServlet {
 		requestDispatcher.forward(request, response);
 	}
 	
-	private void handleBookMoviesRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	private void handleBookMovieRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		RequestDispatcher requestDispatcher = null;
-		int id = Integer.parseInt(request.getParameter("id")));
+		int id = Integer.parseInt(request.getParameter("id"));
 		
 		request.setAttribute("id", id);
 		requestDispatcher = request.getRequestDispatcher("booking-form.jsp");
@@ -232,8 +234,8 @@ public class CinemaControllerServlet extends HttpServlet {
 	
 	private void handleBookRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		RequestDispatcher requestDispatcher = null;
-		int id = Integer.parseInt(request.getParameter("id")));
-		int places = Integer.parseInt(request.getParameter("selectedPlaces")));
+		int id = Integer.parseInt(request.getParameter("id"));
+		int places = Integer.parseInt(request.getParameter("selectedPlaces"));
 		
 		Movie movie = movieService.findMovie(id);
 		String username = (String) (request.getServletContext().getAttribute("username"));
