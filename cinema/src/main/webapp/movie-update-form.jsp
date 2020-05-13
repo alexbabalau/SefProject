@@ -26,7 +26,7 @@
 	
 	<br/><br/>
 	
-	One ticket price : <input type = "number" name = "price" value = "${movie.price}"/>
+	One ticket price : <input type = "number" step = "0.01" name = "price" value = "${movie.price}"/>
 	
 	<br/><br/>
 	

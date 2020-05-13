@@ -75,6 +75,13 @@ public class CinemaControllerServlet extends HttpServlet {
 							break;
 			case "DELETE-MOVIE" : handleDeleteMovieRequest(request, response);
 							break;
+			case "SEE-MOVIES" : handleSeeMoviesRequest(request, response);
+								break;
+			case "BOOK" : handleBookRequest(request, response);
+						break;
+			case "BOOK_MOVIE" : handleBookMovieRequest(request, response);
+								break;
+			
 		}
 	}
 
@@ -92,7 +99,8 @@ public class CinemaControllerServlet extends HttpServlet {
 				case "manager" : request.setAttribute("movie_list", movieService.getMovies());
 								requestDispatcher = request.getRequestDispatcher("manager-movies.jsp");
 								break;
-				default: requestDispatcher = request.getRequestDispatcher("select-cinema.jsp");
+				default:request.setAttribute("manager_list", userService.getManagers()); 
+						requestDispatcher = request.getRequestDispatcher("select-cinema.jsp");
 				
 			}
 		}
@@ -201,6 +209,49 @@ public class CinemaControllerServlet extends HttpServlet {
 		requestDispatcher.forward(request, response);
 	}
 
+	private void handleSeeMoviesRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		RequestDispatcher requestDispatcher = null;
+		String cinema = request.getParameter("cinema");
+		
+		request.setAttribute("movie_list", movieService.getMoviesFromCinema(cinema));
+		requestDispatcher = request.getRequestDispatcher("select-movie.jsp");
+		
+		requestDispatcher.forward(request, response);
+	}
+	
+	private void handleBookMoviesRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		RequestDispatcher requestDispatcher = null;
+		int id = Integer.parseInt(request.getParameter("id")));
+		
+		request.setAttribute("id", id);
+		requestDispatcher = request.getRequestDispatcher("booking-form.jsp");
+		
+		requestDispatcher.forward(request, response);
+	}
+	
+	private void handleBookRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		RequestDispatcher requestDispatcher = null;
+		int id = Integer.parseInt(request.getParameter("id")));
+		int places = Integer.parseInt(request.getParameter("selectedPlaces")));
+		
+		Movie movie = movieService.findMovie(id);
+		String username = (String) (request.getServletContext().getAttribute("username"));
+		
+		try {
+			bookingService.addBooking(new Booking(username, id, places));
+			
+			request.setAttribute("manager_list", userService.getManagers());
+			requestDispatcher = request.getRequestDispatcher("select-cinema.jsp");
+		}
+		
+		catch (NotEnoughSeatsException e) {
+			request.setAttribute("id", id);
+			requestDispatcher = request.getRequestDispatcher("booking-form.jsp");
+		}
+		
+		requestDispatcher.forward(request, response);
+	}
+	
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
