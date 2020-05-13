@@ -1,5 +1,5 @@
 <%@ taglib uri = "http://java.sun.com/jsp/jstl/core" prefix = "c" %>
-
+ <%@ page isELIgnored="false"%>
 <html>
 <body>
 	<h1>Admin requests</h1>
@@ -35,10 +35,10 @@
 	
 			<tr>
 				<td>${tempManager.username}</td>
-				<td>${tempManager.cinemaName}</td>
-				<td>${tempManager.Name}</td>
+				<td>${tempManager.cinema}</td>
+				<td>${tempManager.name}</td>
 				<td>${tempManager.phone}</td>
-				<td>${tempManager.mail}</td>
+				<td>${tempManager.email}</td>
 				<td> <a href = "${acceptLink}">Accept</a> </td>
 				<td> <a href = "${denyLink}">Deny</a> </td>
 			</tr>

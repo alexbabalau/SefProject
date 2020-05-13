@@ -23,7 +23,7 @@ public class RequestService {
 	
 	public void approveRequest(String username) {
 		Manager approvedManager = requestDao.findRequest(username);
-		userDao.addUser(approvedManager, false);
+		userDao.addUser(approvedManager, true);
 		requestDao.deleteRequest(username);
 	}
 	
