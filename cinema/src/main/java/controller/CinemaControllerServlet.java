@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import model.Admin;
 import model.Manager;
+import model.Regular;
 import service.RequestService;
 import service.UserService;
 
@@ -33,8 +34,10 @@ public class CinemaControllerServlet extends HttpServlet {
 	public void init() throws ServletException {
 		super.init();
 		userService = new UserService();
+
 		requestService = new RequestService();
 		userService.addUser(new Admin("admin", "admin", "07xxxxxx", "Admin", "admin@admin.ro"), false);
+
 	}
 	
     public CinemaControllerServlet() {
@@ -46,11 +49,19 @@ public class CinemaControllerServlet extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
 		String command = request.getParameter("command");
 		String username = (String)request.getServletContext().getAttribute("username");
+		
 		switch(command) {
 			case "LOGIN": handleLoginRequest(request, response);
 						  break;
+			case "REGISTER": handleRegisterRequest(request, response);
+							break;
+			case "ACCEPT": handleAcceptRequest(request, response);
+							break;
+			case "DENY": handleDenyRequest(request, response);
+							break;
 		}
 	}
 
@@ -62,7 +73,8 @@ public class CinemaControllerServlet extends HttpServlet {
 			request.getServletContext().setAttribute("username", request.getParameter("username"));
 			
 			switch(userService.getRole(username)) {
-				case "admin": requestDispatcher = request.getRequestDispatcher("admin-requests.jsp");
+				case "admin": request.setAttribute("manager_list", requestService.getRequests());
+							  requestDispatcher = request.getRequestDispatcher("admin-requests.jsp");
 							  break;
 				case "manager" :requestDispatcher = request.getRequestDispatcher("manager-movies.jsp");
 								break;
@@ -75,6 +87,54 @@ public class CinemaControllerServlet extends HttpServlet {
 			requestDispatcher = request.getRequestDispatcher("login-form.html");
 		requestDispatcher.forward(request, response);
 		
+	}
+	
+	private void handleRegisterRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		RequestDispatcher requestDispatcher = null;
+		
+		String username = request.getParameter("username");
+		String password = request.getParameter("password");
+		String name = request.getParameter("name");
+		String phone = request.getParameter("phone");
+		String email = request.getParameter("email");
+		String role = request.getParameter("role");
+		String cinemaName = request.getParameter("cinemaName");
+
+		if (!userService.existUser(username)) {
+			switch(role) {
+				case "manager" : requestService.addRequest(new Manager(username, password, phone, name, email, cinemaName));
+					break;
+				case "regular" : userService.addUser(new Regular(username, password, phone, name, email), false);
+					break;		
+			}
+		}
+		
+		requestDispatcher = request.getRequestDispatcher("login-form.html");
+		requestDispatcher.forward(request, response);
+	}
+	
+	private void handleAcceptRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		RequestDispatcher requestDispatcher = null;
+		
+		String username = request.getParameter("username");
+		
+		requestService.approveRequest(username);
+		
+		request.setAttribute("manager_list", requestService.getRequests());
+		requestDispatcher = request.getRequestDispatcher("admin-requests.jsp");
+		requestDispatcher.forward(request, response);
+	}
+	
+	private void handleDenyRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		RequestDispatcher requestDispatcher = null;
+		
+		String username = request.getParameter("username");
+		
+		requestService.denyRequest(username);
+		
+		request.setAttribute("manager_list", requestService.getRequests());
+		requestDispatcher = request.getRequestDispatcher("admin-requests.jsp");
+		requestDispatcher.forward(request, response);
 	}
 
 	/**

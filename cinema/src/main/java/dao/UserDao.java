@@ -53,7 +53,6 @@ public class UserDao {
 	}
 	
 	
-	
 	public void addUser(User user, boolean isEncrypted){
 		String password = user.getPassword();
 		if(!isEncrypted)
