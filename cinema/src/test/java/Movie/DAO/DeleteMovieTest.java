@@ -1,4 +1,4 @@
-package DAO;
+package Movie.DAO;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

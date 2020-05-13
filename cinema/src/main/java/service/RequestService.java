@@ -12,9 +12,18 @@ public class RequestService {
 	
 	private UserDao userDao;
 	
-	public RequestService() {
+	private static RequestService instance;
+	
+	private RequestService() {
 		requestDao = RequestDao.getInstance();
 		userDao = UserDao.getInstance();
+	}
+	
+	public static RequestService getInstance() {
+		if(instance == null) {
+			instance = new RequestService();
+		}
+		return instance;
 	}
 	
 	public void addRequest(Manager m) {

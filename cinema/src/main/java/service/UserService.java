@@ -2,14 +2,26 @@ package service;
 
 import dao.PasswordUtils;
 import dao.UserDao;
+import model.Manager;
 import model.User;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class UserService {
 	
 	private UserDao userDao;
 	
-	public UserService() {
+	private static UserService instance;
+	
+	private UserService() {
 		userDao = UserDao.getInstance();
+	}
+	
+	public static UserService getInstance() {
+		if(instance == null) {
+			instance = new UserService();
+		}
+		return instance;
 	}
 	
 	public boolean existUser(String username) {
@@ -32,6 +44,11 @@ public class UserService {
 	
 	public String getCinema(String username) {
 		return userDao.selectByUsername(username).getCinema();
+	}
+	
+	public List<Manager> getManagers(){
+		List<User> userList = userDao.getUsers();
+		return userList.stream().filter(user -> user instanceof Manager).map(user -> (Manager)user).collect(Collectors.toList());
 	}
 	
 	public void close() {
