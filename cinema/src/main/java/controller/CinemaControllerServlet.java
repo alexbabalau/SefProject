@@ -58,6 +58,10 @@ public class CinemaControllerServlet extends HttpServlet {
 						  break;
 			case "REGISTER": handleRegisterRequest(request, response);
 							break;
+			case "ACCEPT": handleAcceptRequest(request, response);
+							break;
+			case "DENY": handleDenyRequest(request, response);
+							break;
 		}
 	}
 
@@ -69,7 +73,8 @@ public class CinemaControllerServlet extends HttpServlet {
 			request.getServletContext().setAttribute("username", request.getParameter("username"));
 			
 			switch(userService.getRole(username)) {
-				case "admin": requestDispatcher = request.getRequestDispatcher("admin-requests.jsp");
+				case "admin": request.setAttribute("manager_list", requestService.getRequests());
+							  requestDispatcher = request.getRequestDispatcher("admin-requests.jsp");
 							  break;
 				case "manager" :requestDispatcher = request.getRequestDispatcher("manager-movies.jsp");
 								break;
@@ -99,12 +104,36 @@ public class CinemaControllerServlet extends HttpServlet {
 			switch(role) {
 				case "manager" : requestService.addRequest(new Manager(username, password, phone, name, email, cinemaName));
 					break;
-				case "regular" : userService.addUser(new Regular(username, password, phone, name, email));;
+				case "regular" : userService.addUser(new Regular(username, password, phone, name, email), false);
 					break;		
 			}
 		}
 		
 		requestDispatcher = request.getRequestDispatcher("login-form.html");
+		requestDispatcher.forward(request, response);
+	}
+	
+	private void handleAcceptRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		RequestDispatcher requestDispatcher = null;
+		
+		String username = request.getParameter("username");
+		
+		requestService.approveRequest(username);
+		
+		request.setAttribute("manager_list", requestService.getRequests());
+		requestDispatcher = request.getRequestDispatcher("admin-requests.jsp");
+		requestDispatcher.forward(request, response);
+	}
+	
+	private void handleDenyRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		RequestDispatcher requestDispatcher = null;
+		
+		String username = request.getParameter("username");
+		
+		requestService.denyRequest(username);
+		
+		request.setAttribute("manager_list", requestService.getRequests());
+		requestDispatcher = request.getRequestDispatcher("admin-requests.jsp");
 		requestDispatcher.forward(request, response);
 	}
 
