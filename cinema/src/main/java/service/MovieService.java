@@ -9,11 +9,14 @@ import java.util.stream.Collectors;
 
 public class MovieService {
 	private MovieDao movieDao;
+	private BookingService bookingService;
+	
 	
 	private static MovieService instance;
 	
 	private MovieService() {
 		movieDao = MovieDao.getInstance();
+		bookingService = BookingService.getInstance();
 	}
 	
 	public static MovieService getInstance() {
@@ -25,6 +28,7 @@ public class MovieService {
 	
 	public void deleteMovie(Integer id) {
 		movieDao.deleteMovie(id);
+		bookingService.deleteByMovieId(id);
 	}
 	
 	public List<Movie> getMovies(){

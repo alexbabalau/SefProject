@@ -90,4 +90,11 @@ public class BookingDao {
 	public void close() {
 		myFile.delete();
 	}
+
+	public void deleteByMovieId(Integer id) {
+		JSONArray bookings = JSONUtils.getEntriesJSON(path);
+		bookings.removeIf(obj -> id.equals(Integer.valueOf(((Long)((JSONObject)obj).get("movieId")).intValue())));
+		JSONUtils.persistEntries(bookings, path);
+		
+	}
 }

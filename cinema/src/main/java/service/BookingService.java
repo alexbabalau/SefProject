@@ -60,4 +60,9 @@ public class BookingService {
 	public void close() {
 		bookingDao.close();
 	}
+
+	public void deleteByMovieId(Integer id) {
+		bookingDao.deleteByMovieId(id);
+		
+	}
 }
