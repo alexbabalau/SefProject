@@ -1,6 +1,8 @@
 package controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
@@ -12,7 +14,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import model.Admin;
 import model.Manager;
+import model.Movie;
 import model.Regular;
+import service.MovieService;
 import service.RequestService;
 import service.UserService;
 
@@ -28,15 +32,18 @@ public class CinemaControllerServlet extends HttpServlet {
 	
 	private UserService userService;
 	private RequestService requestService;
+	private MovieService movieService;
 	private ServletContext servletContext;
 	
 	@Override
 	public void init() throws ServletException {
 		super.init();
 		userService = new UserService();
+		movieService = new MovieService();
 
 		requestService = new RequestService();
-		userService.addUser(new Admin("admin", "admin", "07xxxxxx", "Admin", "admin@admin.ro"), false);
+		userService.addUser(new Admin("admin", "admin", "07xxxxxx", "Admin", "admin@admin.ro"), false);		
+		movieService = new MovieService();
 
 	}
 	
@@ -62,6 +69,12 @@ public class CinemaControllerServlet extends HttpServlet {
 							break;
 			case "DENY": handleDenyRequest(request, response);
 							break;
+			case "ADDMOVIE" : handleAddMovieRequest(request, response);
+								break;
+			case "UPDATE-MOVIE" : handleUpdateMovieRequest(request, response);
+							break;
+			case "DELETE-MOVIE" : handleDeleteMovieRequest(request, response);
+							break;
 		}
 	}
 
@@ -76,7 +89,8 @@ public class CinemaControllerServlet extends HttpServlet {
 				case "admin": request.setAttribute("manager_list", requestService.getRequests());
 							  requestDispatcher = request.getRequestDispatcher("admin-requests.jsp");
 							  break;
-				case "manager" :requestDispatcher = request.getRequestDispatcher("manager-movies.jsp");
+				case "manager" : request.setAttribute("movie_list", movieService.getMovies());
+								requestDispatcher = request.getRequestDispatcher("manager-movies.jsp");
 								break;
 				default: requestDispatcher = request.getRequestDispatcher("select-cinema.jsp");
 				
@@ -122,6 +136,7 @@ public class CinemaControllerServlet extends HttpServlet {
 		
 		request.setAttribute("manager_list", requestService.getRequests());
 		requestDispatcher = request.getRequestDispatcher("admin-requests.jsp");
+		
 		requestDispatcher.forward(request, response);
 	}
 	
@@ -134,6 +149,55 @@ public class CinemaControllerServlet extends HttpServlet {
 		
 		request.setAttribute("manager_list", requestService.getRequests());
 		requestDispatcher = request.getRequestDispatcher("admin-requests.jsp");
+		
+		requestDispatcher.forward(request, response);
+	}
+	
+	private void handleAddMovieRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		RequestDispatcher requestDispatcher = null;
+		
+		String title = request.getParameter("title");
+		int freeSeats = Integer.parseInt(request.getParameter("freeSeats"));
+		int startHour = Integer.parseInt(request.getParameter("startHour"));
+		int endHour = Integer.parseInt(request.getParameter("endHour"));
+		double price = Double.parseDouble(request.getParameter("price"));
+		
+		String username = (String) (request.getServletContext().getAttribute("username"));
+		
+		String cinema = userService.getCinema(username);
+
+		movieService.addMovie(new Movie(title, startHour, endHour, freeSeats, price, cinema));
+		
+		request.setAttribute("movie_list", movieService.getMovies());
+		requestDispatcher = request.getRequestDispatcher("manager-movies.jsp");
+		
+		requestDispatcher.forward(request, response);
+	}
+	
+	private void handleUpdateMovieRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		RequestDispatcher requestDispatcher = null;
+		String id = request.getParameter("id");
+		
+		Movie movie = movieService.findMovie(Integer.parseInt(id));
+		
+		request.setAttribute("movie", movie);
+		
+		movieService.deleteMovie(Integer.parseInt(id));
+		
+		requestDispatcher = request.getRequestDispatcher("movie-update-form.jsp");
+		
+		requestDispatcher.forward(request, response);
+	}
+	
+	private void handleDeleteMovieRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		RequestDispatcher requestDispatcher = null;
+		String id = request.getParameter("id");
+		
+		movieService.deleteMovie(Integer.parseInt(id));
+		
+		request.setAttribute("movie_list", movieService.getMovies());
+		requestDispatcher = request.getRequestDispatcher("manager-movies.jsp");
+		
 		requestDispatcher.forward(request, response);
 	}
 
