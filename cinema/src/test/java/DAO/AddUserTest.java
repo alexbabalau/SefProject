@@ -1,7 +1,7 @@
-package cinema;
+package DAO;
 
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import dao.RequestDao;
 import model.Manager;

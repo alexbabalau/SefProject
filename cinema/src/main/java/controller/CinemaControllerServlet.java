@@ -1,6 +1,8 @@
 package controller;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
@@ -14,6 +16,7 @@ import model.Admin;
 import model.Manager;
 import model.Movie;
 import model.Regular;
+import service.MovieService;
 import service.RequestService;
 import service.UserService;
 
@@ -36,10 +39,10 @@ public class CinemaControllerServlet extends HttpServlet {
 	public void init() throws ServletException {
 		super.init();
 		userService = new UserService();
+		movieService = new MovieService();
 
 		requestService = new RequestService();
-		userService.addUser(new Admin("admin", "admin", "07xxxxxx", "Admin", "admin@admin.ro"), false);
-		
+		userService.addUser(new Admin("admin", "admin", "07xxxxxx", "Admin", "admin@admin.ro"), false);		
 		movieService = new MovieService();
 
 	}
@@ -171,26 +174,26 @@ public class CinemaControllerServlet extends HttpServlet {
 		requestDispatcher.forward(request, response);
 	}
 	
-	private void handleUpdateRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	private void handleUpdateMovieRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		RequestDispatcher requestDispatcher = null;
 		String id = request.getParameter("id");
 		
-		Movie movie = movieService.findMovie(id);
+		Movie movie = movieService.findMovie(Integer.parseInt(id));
 		
 		request.setAttribute("movie", movie);
 		
-		movieService.deleteMovie(id);
+		movieService.deleteMovie(Integer.parseInt(id));
 		
 		requestDispatcher = request.getRequestDispatcher("movie-update-form.jsp");
 		
 		requestDispatcher.forward(request, response);
 	}
 	
-	private void handleDeleteRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	private void handleDeleteMovieRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		RequestDispatcher requestDispatcher = null;
 		String id = request.getParameter("id");
 		
-		movieService.deleteMovie(id);
+		movieService.deleteMovie(Integer.parseInt(id));
 		
 		request.setAttribute("movie_list", movieService.getMovies());
 		requestDispatcher = request.getRequestDispatcher("manager-movies.jsp");
