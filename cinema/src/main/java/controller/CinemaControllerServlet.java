@@ -162,7 +162,7 @@ public class CinemaControllerServlet extends HttpServlet {
 		int endHour = Integer.parseInt(request.getParameter("endHour"));
 		double price = Double.parseDouble(request.getParameter("price"));
 		
-		String username = (String) request.getServletContext().getAttribute("username");
+		String username = (String) (request.getServletContext().getAttribute("username"));
 		
 		String cinema = userService.getCinema(username);
 

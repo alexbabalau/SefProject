@@ -1,10 +1,15 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
+<%@ taglib uri = "http://java.sun.com/jsp/jstl/core" prefix = "c" %>
+ <%@ page isELIgnored="false"%>
 <html>
 <body>
 	<h1>Movies</h1>
 	
 	<hr>
+	<br><br>
+	
+	<input type = "button" value = "Add new movie" 
+		onclick = "window.location.href = 'movie-form.html'; return false"/>
+		
 	<br><br>
 	
 	<table border = "1">
@@ -34,11 +39,11 @@
 			</c:url>
 	
 			<tr>
-				<td>${tempMovie.username}</td>
-				<td>${tempMovie.cinema}</td>
-				<td>${tempMovie.name}</td>
-				<td>${tempMovie.phone}</td>
-				<td>${tempMovie.email}</td>
+				<td>${tempMovie.title}</td>
+				<td>${tempMovie.startHour}</td>
+				<td>${tempMovie.endHour}</td>
+				<td>${tempMovie.freeSeats}</td>
+				<td>${tempMovie.price}</td>
 				<td> <a href = "${update}">Update</a> </td>
 				<td> <a href = "${delete}">Delete</a> </td>
 			</tr>
@@ -46,12 +51,6 @@
 		</c:forEach>
 		
 		<br><br>
-		
-		<c:url var = "addMovie" value = "CinemaControllerServlet">
-			<c:param name = "command" value = "ADDMOVIE"/>
-		</c:url>
-		
-		<a href = "${addMovie}">Add New Movie</a>
 	
 	</table>
 
