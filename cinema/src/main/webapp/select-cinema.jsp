@@ -1,12 +1,27 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
-<!DOCTYPE html>
+<%@ taglib uri = "http://java.sun.com/jsp/jstl/core" prefix = "c" %>
+ <%@ page isELIgnored="false"%>
 <html>
-<head>
-<meta charset="ISO-8859-1">
-<title>Select Cinema</title>
-</head>
 <body>
-	<h1>Select Cinema</h1>
+	<h1>Cinema List</h1>
+	
+	<hr>
+	<br><br>
+	
+	<form action="CinemaControllerServlet">
+	
+	<select name = "cinema" >
+	
+		<c:forEach var="tempManager" items="<%= request.getAttribute(\"manager_list\") %>">
+			<option>${tempManager.cinema}</option>
+		</c:forEach>
+		
+	</select>
+	
+	<input type = "hidden" name = "command" value = "SEE-MOVIES" />
+	
+	<input type = "submit" value = "Submit"/>
+	
+	</form>
+
 </body>
 </html>
