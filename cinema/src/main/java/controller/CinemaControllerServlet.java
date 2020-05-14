@@ -46,6 +46,18 @@ public class CinemaControllerServlet extends HttpServlet {
 		
 		requestService = RequestService.getInstance();
 		userService.addUser(new Admin("admin", "admin", "07xxxxxx", "Admin", "admin@admin.ro"), false);
+		
+		userService.addUser(new Manager("manager1", "manager1", "07xxxxx", "Manager1", "manager1@manager1.ro", "CineDaria"), false);
+		userService.addUser(new Manager("manager2", "manager2", "07xxxxx", "Manager2", "manager2@manager2.ro", "CineAlex"), false);
+		userService.addUser(new Regular("daria", "daria", "07xxxxxx", "Daria", "daria@daria.ro"), false);
+		
+		movieService.addMovie(new Movie("Movie1", 7, 8, 100, 30.0, "CineDaria"));
+		movieService.addMovie(new Movie("Movie2", 7, 8, 120, 30.0, "CineDaria"));
+		movieService.addMovie(new Movie("Movie3", 7, 8, 10, 30.0, "CineAlex"));
+		movieService.addMovie(new Movie("Movie4", 7, 8, 1200, 30.0, "CineDaria"));
+		movieService.addMovie(new Movie("Movie5", 7, 8, 120, 30.0, "CineAlex"));
+		
+		
 	}
 	
     public CinemaControllerServlet() {
