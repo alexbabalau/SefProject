@@ -7,8 +7,8 @@
 	<hr>
 	<br><br>
 	
-	<input type = "button" name = "command" value = "SEE-BOOKINGS" 
-		onclick = "window.location.href = 'CinemaControllerServlet'; return false"/>
+	<input type = "button" value = "My Bookings" 
+		onclick = "window.location.href = 'CinemaControllerServlet?command=SEE-BOOKINGS'; return false"/>
 		
 	<br><br>
 	

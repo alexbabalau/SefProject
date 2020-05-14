@@ -107,12 +107,16 @@ public class CinemaControllerServlet extends HttpServlet {
 									break;
 			case "LOGOUT": handleLogoutRequest(request, response);
 							break;
+			case "SEE-CINEMAS" : handleSeeCinemasRequest(request, response);
+								break;
 		}
 	}
 
 	private void handleLogoutRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String username = (String) getServletContext().getAttribute("username");
 		RequestDispatcher requestDispatcher = null;
+		
+		System.out.println("logout 1: " + username);
 		
 		if(username == null) {
 			requestDispatcher = request.getRequestDispatcher("not-authorized.jsp");
@@ -121,6 +125,10 @@ public class CinemaControllerServlet extends HttpServlet {
 		}
 		
 		getServletContext().setAttribute("username", null);
+		
+		username = (String) getServletContext().getAttribute("username");
+		
+		System.out.println("logout 2: " + username);
 		
 		requestDispatcher = request.getRequestDispatcher("login-form.html");
 		requestDispatcher.forward(request, response);
@@ -154,9 +162,8 @@ public class CinemaControllerServlet extends HttpServlet {
 
 	private void handleLoginRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String username = (String) getServletContext().getAttribute("username");
+		System.out.println("login : " + username);
 		RequestDispatcher requestDispatcher = null;
-		System.out.println(username);
-		
 		
 		if(username != null) {
 			requestDispatcher = request.getRequestDispatcher("not-authorized.jsp");
@@ -187,7 +194,16 @@ public class CinemaControllerServlet extends HttpServlet {
 		
 	}
 	
-	
+	private void handleSeeCinemasRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String username = (String) getServletContext().getAttribute("username");
+		RequestDispatcher requestDispatcher = null;
+		
+		request.setAttribute("manager_list", userService.getManagers()); 
+		requestDispatcher = request.getRequestDispatcher("select-cinema.jsp");
+				
+		requestDispatcher.forward(request, response);
+		
+	}
 	
 	private void handleRegisterRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String username = (String) getServletContext().getAttribute("username");
@@ -441,7 +457,7 @@ public class CinemaControllerServlet extends HttpServlet {
 		
 		String username = (String) (request.getServletContext().getAttribute("username"));
 		
-		List<Booking> bookings = bookingService.getBookingsFromUsername("username");
+		List<Booking> bookings = bookingService.getBookingsFromUsername(username);
 
 		List<MovieAndBooking> movieBooking = bookingService.getMovieAndBooking(bookings);
 		
@@ -459,9 +475,11 @@ public class CinemaControllerServlet extends HttpServlet {
 		
 		String username = (String) (request.getServletContext().getAttribute("username"));
 		
-		List<Booking> bookings = bookingService.getBookingsFromUsername("username");
+		List<Booking> bookings = bookingService.getBookingsFromUsername(username);
 
 		List<MovieAndBooking> movieBooking = bookingService.getMovieAndBooking(bookings);
+		
+		System.out.println(bookingService.getBookings());
 		
 		request.setAttribute("booking_list", movieBooking);
 		requestDispatcher = request.getRequestDispatcher("user-bookings.jsp");

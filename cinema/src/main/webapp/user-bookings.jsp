@@ -7,6 +7,11 @@
 	<hr>
 	<br><br>
 	
+	<input type = "button" value = "Cinemas" 
+		onclick = "window.location.href = 'CinemaControllerServlet?command=SEE-CINEMAS'; return false"/>
+		
+	<br><br>
+	
 	<table border = "1">
 	
 	<tr>
@@ -16,7 +21,6 @@
 		<th>End hour</th>
 		<th>Booked seats</th>
 		<th>Price</th>
-		<th></th>
 		<th></th>
 		
 	</tr>
