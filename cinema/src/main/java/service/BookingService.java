@@ -5,18 +5,22 @@ import java.util.stream.Collectors;
 
 import dao.BookingDao;
 import dao.MovieDao;
+import dao.UserDao;
 import model.Booking;
 import model.Movie;
 import model.MovieAndBooking;
+import model.MovieBookingAndUser;
 
 public class BookingService {
 	private BookingDao bookingDao;
 	private MovieService movieService;
+	private UserDao userDao;
 	private static BookingService instance;
 	
 	private BookingService() {
 		bookingDao = BookingDao.getInstance();
 		movieService = MovieService.getInstance();
+		userDao = UserDao.getInstance();
 	}
 	
 	public static BookingService getInstance() {
@@ -69,5 +73,14 @@ public class BookingService {
 	
 	public List<MovieAndBooking> getMovieAndBooking(List<Booking> bookings){
 		return bookings.stream().map(booking -> new MovieAndBooking(movieService.findMovie(booking.getMovieId()), booking)).collect(Collectors.toList());
+	}
+	
+	public List<Booking> getBookingsFromCinema(String cinema){
+		List<Booking> bookings = getBookings();
+		return bookings.stream().filter(booking -> movieService.findMovie(booking.getMovieId()).getCinema().equals(cinema)).collect(Collectors.toList());
+	}
+	
+	public List<MovieBookingAndUser> getMovieBookingAndUser(List<Booking> bookings){
+		return bookings.stream().map(booking -> new MovieBookingAndUser(movieService.findMovie(booking.getMovieId()), booking, userDao.selectByUsername(booking.getUsername()))).collect(Collectors.toList());
 	}
 }

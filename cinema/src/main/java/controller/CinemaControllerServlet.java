@@ -96,8 +96,27 @@ public class CinemaControllerServlet extends HttpServlet {
 						break;
 			case "BOOK-MOVIE" : handleBookMovieRequest(request, response);
 								break;
-			
+			case "MANAGER-BOOKING":handleManagerBookingRequest(request, response);
+									break;
 		}
+	}
+
+	private void handleManagerBookingRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		RequestDispatcher requestDispatcher = null;
+		
+		String username = (String) (request.getServletContext().getAttribute("username"));
+		
+		String cinema = userService.getCinema(username);
+		
+		List<Booking> bookingsFromCinema = bookingService.getBookingsFromCinema(cinema);
+		
+		System.out.println(bookingsFromCinema);
+		
+		request.setAttribute("movie_booking_and_user_list", bookingService.getMovieBookingAndUser(bookingsFromCinema));
+		
+		requestDispatcher = request.getRequestDispatcher("manager-bookings.jsp");
+		
+		requestDispatcher.forward(request, response);
 	}
 
 	private void handleLoginRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -111,7 +130,7 @@ public class CinemaControllerServlet extends HttpServlet {
 				case "admin": request.setAttribute("manager_list", requestService.getRequests());
 							  requestDispatcher = request.getRequestDispatcher("admin-requests.jsp");
 							  break;
-				case "manager" : request.setAttribute("movie_list", movieService.getMovies());
+				case "manager" : request.setAttribute("movie_list", movieService.getMoviesFromCinema(userService.getCinema(username)));
 								requestDispatcher = request.getRequestDispatcher("manager-movies.jsp");
 								break;
 				default:request.setAttribute("manager_list", userService.getManagers()); 
@@ -125,6 +144,8 @@ public class CinemaControllerServlet extends HttpServlet {
 		requestDispatcher.forward(request, response);
 		
 	}
+	
+	
 	
 	private void handleRegisterRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		RequestDispatcher requestDispatcher = null;
@@ -191,7 +212,7 @@ public class CinemaControllerServlet extends HttpServlet {
 
 		movieService.addMovie(new Movie(title, startHour, endHour, freeSeats, price, cinema));
 		
-		request.setAttribute("movie_list", movieService.getMovies());
+		request.setAttribute("movie_list", movieService.getMoviesFromCinema(userService.getCinema(username)));
 		requestDispatcher = request.getRequestDispatcher("manager-movies.jsp");
 		
 		requestDispatcher.forward(request, response);

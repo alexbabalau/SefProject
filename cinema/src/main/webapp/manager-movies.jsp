@@ -5,6 +5,8 @@
 	<h1>Movies</h1>
 	
 	<hr>
+	
+	<a href = "CinemaControllerServlet?command=MANAGER-BOOKING">View bookings...</a>
 	<br><br>
 	
 	<input type = "button" value = "Add new movie" 
