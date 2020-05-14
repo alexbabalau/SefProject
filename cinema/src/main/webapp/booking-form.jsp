@@ -2,8 +2,9 @@
  <%@ page isELIgnored="false"%>
 <html>
 <body>
-	<h1>Book seats</h1>
 	
+	<h1>Book seats</h1>
+	<a href="CinemaControllerServlet?command=LOGOUT">Logout</a>
 	<hr>
 	<br><br>
 	

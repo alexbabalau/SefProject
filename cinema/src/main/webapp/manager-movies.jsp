@@ -3,7 +3,7 @@
 <html>
 <body>
 	<h1>Movies</h1>
-	
+	<a href="CinemaControllerServlet?command=LOGOUT">Logout</a>
 	<hr>
 	
 	<input type = "button" value = "View Bookings" 
