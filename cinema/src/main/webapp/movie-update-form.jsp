@@ -30,7 +30,8 @@
 	
 	<br/><br/>
 	
-	<input type = "hidden" name = "command" value = "ADDMOVIE" />
+	<input type = "hidden" name = "command" value = "ADDMOVIEID" />
+	<input type = "hidden" name = "id" value = "${movie.id}" />
 	
 	<input type = "submit" value = "Submit"/>
 </form>

@@ -6,7 +6,8 @@
 	
 	<hr>
 	
-	<a href = "CinemaControllerServlet?command=MANAGER-BOOKING">View bookings...</a>
+	<input type = "button" value = "View Bookings" 
+		onclick = "window.location.href = 'CinemaControllerServlet?command=MANAGER-BOOKING'; return false"/>
 	<br><br>
 	
 	<input type = "button" value = "Add new movie" 

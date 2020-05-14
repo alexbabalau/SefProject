@@ -86,6 +86,8 @@ public class CinemaControllerServlet extends HttpServlet {
 							break;
 			case "ADDMOVIE" : handleAddMovieRequest(request, response);
 								break;
+			case "ADDMOVIEID": handleAddMovieIdRequest(request, response);
+								break;
 			case "UPDATE-MOVIE" : handleUpdateMovieRequest(request, response);
 							break;
 			case "DELETE-MOVIE" : handleDeleteMovieRequest(request, response);
@@ -111,7 +113,7 @@ public class CinemaControllerServlet extends HttpServlet {
 		List<Booking> bookingsFromCinema = bookingService.getBookingsFromCinema(cinema);
 		
 		System.out.println(bookingsFromCinema);
-		
+		System.out.println(movieService.getMovies());
 		request.setAttribute("movie_booking_and_user_list", bookingService.getMovieBookingAndUser(bookingsFromCinema));
 		
 		requestDispatcher = request.getRequestDispatcher("manager-bookings.jsp");
@@ -218,6 +220,28 @@ public class CinemaControllerServlet extends HttpServlet {
 		requestDispatcher.forward(request, response);
 	}
 	
+	private void handleAddMovieIdRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		RequestDispatcher requestDispatcher = null;
+		
+		String title = request.getParameter("title");
+		int freeSeats = Integer.parseInt(request.getParameter("freeSeats"));
+		int startHour = Integer.parseInt(request.getParameter("startHour"));
+		int endHour = Integer.parseInt(request.getParameter("endHour"));
+		double price = Double.parseDouble(request.getParameter("price"));
+		int id = Integer.parseInt(request.getParameter("id"));
+		
+		String username = (String) (request.getServletContext().getAttribute("username"));
+		
+		String cinema = userService.getCinema(username);
+
+		movieService.addMovie(new Movie(id, title, startHour, endHour, freeSeats, price, cinema));
+		
+		request.setAttribute("movie_list", movieService.getMoviesFromCinema(userService.getCinema(username)));
+		requestDispatcher = request.getRequestDispatcher("manager-movies.jsp");
+		
+		requestDispatcher.forward(request, response);
+	}
+	
 	private void handleUpdateMovieRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		RequestDispatcher requestDispatcher = null;
 		String id = request.getParameter("id");
@@ -226,7 +250,7 @@ public class CinemaControllerServlet extends HttpServlet {
 		
 		request.setAttribute("movie", movie);
 		
-		movieService.deleteMovie(Integer.parseInt(id));
+		movieService.deleteMovie(Integer.parseInt(id), true);
 		
 		requestDispatcher = request.getRequestDispatcher("movie-update-form.jsp");
 		
@@ -237,9 +261,14 @@ public class CinemaControllerServlet extends HttpServlet {
 		RequestDispatcher requestDispatcher = null;
 		String id = request.getParameter("id");
 		
-		movieService.deleteMovie(Integer.parseInt(id));
+		movieService.deleteMovie(Integer.parseInt(id), false);
 		
-		request.setAttribute("movie_list", movieService.getMovies());
+		String username = (String) (request.getServletContext().getAttribute("username"));
+		
+		String cinema = userService.getCinema(username);
+
+		
+		request.setAttribute("movie_list", movieService.getMoviesFromCinema(userService.getCinema(username)));
 		requestDispatcher = request.getRequestDispatcher("manager-movies.jsp");
 		
 		requestDispatcher.forward(request, response);
