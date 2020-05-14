@@ -96,7 +96,10 @@ public class CinemaControllerServlet extends HttpServlet {
 						break;
 			case "BOOK-MOVIE" : handleBookMovieRequest(request, response);
 								break;
-			
+			case "SEE-BOOKINGS" : handleSeeBookingsRequest(request, response);
+								break;
+			case "DELETE-BOOKING" : handleDeleteBookingRequest(request, response);
+									break;
 		}
 	}
 
@@ -263,6 +266,39 @@ public class CinemaControllerServlet extends HttpServlet {
 			request.setAttribute("id", id);
 			requestDispatcher = request.getRequestDispatcher("booking-form.jsp");
 		}
+		
+		requestDispatcher.forward(request, response);
+	}
+	
+	private void handleSeeBookingsRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		RequestDispatcher requestDispatcher = null;
+		
+		String username = (String) (request.getServletContext().getAttribute("username"));
+		
+		List<Booking> bookings = bookingService.getBookingsFromUsername("username");
+
+		List<MovieAndBooking> movieBooking = bookingService.getMovieAndBooking(bookings);
+		
+		request.setAttribute("booking_list", movieBooking);
+		requestDispatcher = request.getRequestDispatcher("user-bookings.jsp");
+		
+		requestDispatcher.forward(request, response);
+	}
+	
+	private void handleDeleteBookingRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		RequestDispatcher requestDispatcher = null;
+		String id = request.getParameter("id");
+		
+		bookingService.deleteBooking(Integer.parseInt(id));
+		
+		String username = (String) (request.getServletContext().getAttribute("username"));
+		
+		List<Booking> bookings = bookingService.getBookingsFromUsername("username");
+
+		List<MovieAndBooking> movieBooking = bookingService.getMovieAndBooking(bookings);
+		
+		request.setAttribute("booking_list", movieBooking);
+		requestDispatcher = request.getRequestDispatcher("user-bookings.jsp");
 		
 		requestDispatcher.forward(request, response);
 	}

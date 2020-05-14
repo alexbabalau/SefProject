@@ -7,6 +7,11 @@
 	<hr>
 	<br><br>
 	
+	<input type = "button" name = "command" value = "SEE-BOOKINGS" 
+		onclick = "window.location.href = 'CinemaControllerServlet'; return false"/>
+		
+	<br><br>
+	
 	<form action="CinemaControllerServlet">
 	
 	<select name = "cinema" >
