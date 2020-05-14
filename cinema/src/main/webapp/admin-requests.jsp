@@ -4,6 +4,8 @@
 <body>
 	<h1>Admin requests</h1>
 	
+	<a href="CinemaControllerServlet?command=LOGOUT">Logout</a>
+	
 	<hr>
 	<br><br>
 	

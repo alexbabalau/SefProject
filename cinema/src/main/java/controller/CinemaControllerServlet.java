@@ -16,6 +16,7 @@ import model.Admin;
 import model.Booking;
 import model.Manager;
 import model.Movie;
+import model.MovieAndBooking;
 import model.Regular;
 import service.BookingService;
 import service.MovieService;
@@ -73,7 +74,7 @@ public class CinemaControllerServlet extends HttpServlet {
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
 		String command = request.getParameter("command");
-		String username = (String)request.getServletContext().getAttribute("username");
+		String username = (String)getServletContext().getAttribute("username");
 		
 		switch(command) {
 			case "LOGIN": handleLoginRequest(request, response);
@@ -85,6 +86,8 @@ public class CinemaControllerServlet extends HttpServlet {
 			case "DENY": handleDenyRequest(request, response);
 							break;
 			case "ADDMOVIE" : handleAddMovieRequest(request, response);
+								break;
+			case "ADDMOVIEID": handleAddMovieIdRequest(request, response);
 								break;
 			case "UPDATE-MOVIE" : handleUpdateMovieRequest(request, response);
 							break;
@@ -100,21 +103,76 @@ public class CinemaControllerServlet extends HttpServlet {
 								break;
 			case "DELETE-BOOKING" : handleDeleteBookingRequest(request, response);
 									break;
+			case "MANAGER-BOOKING":handleManagerBookingRequest(request, response);
+									break;
+			case "LOGOUT": handleLogoutRequest(request, response);
+							break;
 		}
 	}
 
-	private void handleLoginRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	private void handleLogoutRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String username = (String) getServletContext().getAttribute("username");
 		RequestDispatcher requestDispatcher = null;
-		String username = request.getParameter("username");
+		
+		if(username == null) {
+			requestDispatcher = request.getRequestDispatcher("not-authorized.jsp");
+			requestDispatcher.forward(request, response);
+			return;
+		}
+		
+		getServletContext().setAttribute("username", null);
+		
+		requestDispatcher = request.getRequestDispatcher("login-form.html");
+		requestDispatcher.forward(request, response);
+	}
+
+	private void handleManagerBookingRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String username = (String) getServletContext().getAttribute("username");
+		String role = userService.getRole(username);
+		RequestDispatcher requestDispatcher = null;
+		
+		if(!role.equals("manager")) {
+			requestDispatcher = request.getRequestDispatcher("not-authorized.jsp");
+			requestDispatcher.forward(request, response);
+			return;
+		}
+		
+		
+		
+		String cinema = userService.getCinema(username);
+		
+		List<Booking> bookingsFromCinema = bookingService.getBookingsFromCinema(cinema);
+		
+		System.out.println(bookingsFromCinema);
+		System.out.println(movieService.getMovies());
+		request.setAttribute("movie_booking_and_user_list", bookingService.getMovieBookingAndUser(bookingsFromCinema));
+		
+		requestDispatcher = request.getRequestDispatcher("manager-bookings.jsp");
+		
+		requestDispatcher.forward(request, response);
+	}
+
+	private void handleLoginRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String username = (String) getServletContext().getAttribute("username");
+		RequestDispatcher requestDispatcher = null;
+		System.out.println(username);
+		
+		
+		if(username != null) {
+			requestDispatcher = request.getRequestDispatcher("not-authorized.jsp");
+			requestDispatcher.forward(request, response);
+			return;
+		}
+		username = request.getParameter("username");
 		if(userService.areValidCredentials(request.getParameter("username"), request.getParameter("password"))) {
 			
-			request.getServletContext().setAttribute("username", request.getParameter("username"));
+			getServletContext().setAttribute("username", request.getParameter("username"));
 			
 			switch(userService.getRole(username)) {
 				case "admin": request.setAttribute("manager_list", requestService.getRequests());
 							  requestDispatcher = request.getRequestDispatcher("admin-requests.jsp");
 							  break;
-				case "manager" : request.setAttribute("movie_list", movieService.getMovies());
+				case "manager" : request.setAttribute("movie_list", movieService.getMoviesFromCinema(userService.getCinema(username)));
 								requestDispatcher = request.getRequestDispatcher("manager-movies.jsp");
 								break;
 				default:request.setAttribute("manager_list", userService.getManagers()); 
@@ -129,10 +187,19 @@ public class CinemaControllerServlet extends HttpServlet {
 		
 	}
 	
+	
+	
 	private void handleRegisterRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String username = (String) getServletContext().getAttribute("username");
 		RequestDispatcher requestDispatcher = null;
 		
-		String username = request.getParameter("username");
+		if(username != null) {
+			requestDispatcher = request.getRequestDispatcher("not-authorized.jsp");
+			requestDispatcher.forward(request, response);
+			return;
+		}
+		
+		username = request.getParameter("username");
 		String password = request.getParameter("password");
 		String name = request.getParameter("name");
 		String phone = request.getParameter("phone");
@@ -154,9 +221,17 @@ public class CinemaControllerServlet extends HttpServlet {
 	}
 	
 	private void handleAcceptRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String username = (String) getServletContext().getAttribute("username");
+		String role = userService.getRole(username);
 		RequestDispatcher requestDispatcher = null;
 		
-		String username = request.getParameter("username");
+		if(!role.equals("admin")) {
+			requestDispatcher = request.getRequestDispatcher("not-authorized.jsp");
+			requestDispatcher.forward(request, response);
+			return;
+		}
+		
+		username = request.getParameter("username");
 		
 		requestService.approveRequest(username);
 		
@@ -167,9 +242,17 @@ public class CinemaControllerServlet extends HttpServlet {
 	}
 	
 	private void handleDenyRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String username = (String) getServletContext().getAttribute("username");
+		String role = userService.getRole(username);
 		RequestDispatcher requestDispatcher = null;
 		
-		String username = request.getParameter("username");
+		if(!role.equals("admin")) {
+			requestDispatcher = request.getRequestDispatcher("not-authorized.jsp");
+			requestDispatcher.forward(request, response);
+			return;
+		}
+		
+		username = request.getParameter("username");
 		
 		requestService.denyRequest(username);
 		
@@ -180,7 +263,15 @@ public class CinemaControllerServlet extends HttpServlet {
 	}
 	
 	private void handleAddMovieRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String username = (String) getServletContext().getAttribute("username");
+		String role = userService.getRole(username);
 		RequestDispatcher requestDispatcher = null;
+		
+		if(!role.equals("manager")) {
+			requestDispatcher = request.getRequestDispatcher("not-authorized.jsp");
+			requestDispatcher.forward(request, response);
+			return;
+		}
 		
 		String title = request.getParameter("title");
 		int freeSeats = Integer.parseInt(request.getParameter("freeSeats"));
@@ -188,27 +279,65 @@ public class CinemaControllerServlet extends HttpServlet {
 		int endHour = Integer.parseInt(request.getParameter("endHour"));
 		double price = Double.parseDouble(request.getParameter("price"));
 		
-		String username = (String) (request.getServletContext().getAttribute("username"));
+		username = (String) (getServletContext().getAttribute("username"));
 		
 		String cinema = userService.getCinema(username);
 
 		movieService.addMovie(new Movie(title, startHour, endHour, freeSeats, price, cinema));
 		
-		request.setAttribute("movie_list", movieService.getMovies());
+		request.setAttribute("movie_list", movieService.getMoviesFromCinema(userService.getCinema(username)));
+		requestDispatcher = request.getRequestDispatcher("manager-movies.jsp");
+		
+		requestDispatcher.forward(request, response);
+	}
+	
+	private void handleAddMovieIdRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String username = (String) getServletContext().getAttribute("username");
+		String role = userService.getRole(username);
+		RequestDispatcher requestDispatcher = null;
+		
+		if(!role.equals("manager")) {
+			requestDispatcher = request.getRequestDispatcher("not-authorized.jsp");
+			requestDispatcher.forward(request, response);
+			return;
+		}
+		
+		String title = request.getParameter("title");
+		int freeSeats = Integer.parseInt(request.getParameter("freeSeats"));
+		int startHour = Integer.parseInt(request.getParameter("startHour"));
+		int endHour = Integer.parseInt(request.getParameter("endHour"));
+		double price = Double.parseDouble(request.getParameter("price"));
+		int id = Integer.parseInt(request.getParameter("id"));
+		
+		username = (String) (getServletContext().getAttribute("username"));
+		
+		String cinema = userService.getCinema(username);
+
+		movieService.addMovie(new Movie(id, title, startHour, endHour, freeSeats, price, cinema));
+		
+		request.setAttribute("movie_list", movieService.getMoviesFromCinema(userService.getCinema(username)));
 		requestDispatcher = request.getRequestDispatcher("manager-movies.jsp");
 		
 		requestDispatcher.forward(request, response);
 	}
 	
 	private void handleUpdateMovieRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String username = (String) getServletContext().getAttribute("username");
+		String role = userService.getRole(username);
 		RequestDispatcher requestDispatcher = null;
+		
+		if(!role.equals("manager")) {
+			requestDispatcher = request.getRequestDispatcher("not-authorized.jsp");
+			requestDispatcher.forward(request, response);
+			return;
+		}
 		String id = request.getParameter("id");
 		
 		Movie movie = movieService.findMovie(Integer.parseInt(id));
 		
 		request.setAttribute("movie", movie);
 		
-		movieService.deleteMovie(Integer.parseInt(id));
+		movieService.deleteMovie(Integer.parseInt(id), true);
 		
 		requestDispatcher = request.getRequestDispatcher("movie-update-form.jsp");
 		
@@ -216,19 +345,40 @@ public class CinemaControllerServlet extends HttpServlet {
 	}
 	
 	private void handleDeleteMovieRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String username = (String) getServletContext().getAttribute("username");
+		String role = userService.getRole(username);
 		RequestDispatcher requestDispatcher = null;
+		
+		if(!role.equals("manager")) {
+			requestDispatcher = request.getRequestDispatcher("not-authorized.jsp");
+			requestDispatcher.forward(request, response);
+			return;
+		}
 		String id = request.getParameter("id");
 		
-		movieService.deleteMovie(Integer.parseInt(id));
+		movieService.deleteMovie(Integer.parseInt(id), false);
 		
-		request.setAttribute("movie_list", movieService.getMovies());
+		username = (String) (getServletContext().getAttribute("username"));
+		
+		String cinema = userService.getCinema(username);
+
+		
+		request.setAttribute("movie_list", movieService.getMoviesFromCinema(userService.getCinema(username)));
 		requestDispatcher = request.getRequestDispatcher("manager-movies.jsp");
 		
 		requestDispatcher.forward(request, response);
 	}
 
 	private void handleSeeMoviesRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String username = (String) getServletContext().getAttribute("username");
+		String role = userService.getRole(username);
 		RequestDispatcher requestDispatcher = null;
+		
+		if(!role.equals("regular")) {
+			requestDispatcher = request.getRequestDispatcher("not-authorized.jsp");
+			requestDispatcher.forward(request, response);
+			return;
+		}
 		String cinema = request.getParameter("cinema");
 		
 		request.setAttribute("movie_list", movieService.getMoviesFromCinema(cinema));
@@ -238,7 +388,15 @@ public class CinemaControllerServlet extends HttpServlet {
 	}
 	
 	private void handleBookMovieRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String username = (String) getServletContext().getAttribute("username");
+		String role = userService.getRole(username);
 		RequestDispatcher requestDispatcher = null;
+		
+		if(!role.equals("regular")) {
+			requestDispatcher = request.getRequestDispatcher("not-authorized.jsp");
+			requestDispatcher.forward(request, response);
+			return;
+		}
 		int id = Integer.parseInt(request.getParameter("id"));
 		
 		request.setAttribute("id", id);
@@ -248,12 +406,20 @@ public class CinemaControllerServlet extends HttpServlet {
 	}
 	
 	private void handleBookRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		String username = (String) getServletContext().getAttribute("username");
+		String role = userService.getRole(username);
 		RequestDispatcher requestDispatcher = null;
+		
+		if(!role.equals("regular")) {
+			requestDispatcher = request.getRequestDispatcher("not-authorized.jsp");
+			requestDispatcher.forward(request, response);
+			return;
+		}
 		int id = Integer.parseInt(request.getParameter("id"));
 		int places = Integer.parseInt(request.getParameter("selectedSeats"));
 		
 		Movie movie = movieService.findMovie(id);
-		String username = (String) (request.getServletContext().getAttribute("username"));
+		username = (String) (getServletContext().getAttribute("username"));
 		
 		try {
 			bookingService.addBooking(new Booking(username, id, places));
@@ -318,6 +484,5 @@ public class CinemaControllerServlet extends HttpServlet {
 		movieService.close();
 		bookingService.close();
 	}
-
 	
 }

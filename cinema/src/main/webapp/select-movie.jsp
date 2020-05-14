@@ -3,7 +3,7 @@
 <html>
 <body>
 	<h1>Movie List</h1>
-	
+	<a href="CinemaControllerServlet?command=LOGOUT">Logout</a>
 	<hr>
 		
 	<br><br>

@@ -26,9 +26,10 @@ public class MovieService {
 		return instance;
 	}
 	
-	public void deleteMovie(Integer id) {
+	public void deleteMovie(Integer id, boolean forUpdate) {
 		movieDao.deleteMovie(id);
-		bookingDao.deleteByMovieId(id);
+		if(!forUpdate)
+			bookingDao.deleteByMovieId(id);
 	}
 	
 	public List<Movie> getMovies(){

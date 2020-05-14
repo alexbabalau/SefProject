@@ -84,6 +84,13 @@ public class Booking {
 			return false;
 		return true;
 	}
+
+	@Override
+	public String toString() {
+		return "Booking [movieId=" + movieId + ", username=" + username + ", selectedSeats=" + selectedSeats + ", id="
+				+ id + "]";
+	}
+	
 	
 	
 }

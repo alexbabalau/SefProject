@@ -51,6 +51,10 @@ public class UserService {
 		return userList.stream().filter(user -> user instanceof Manager).map(user -> (Manager)user).collect(Collectors.toList());
 	}
 	
+	public User findUser(String username) {
+		return userDao.selectByUsername(username);
+	}
+	
 	public void close() {
 		userDao.close();
 	}
