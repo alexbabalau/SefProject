@@ -7,6 +7,7 @@ import dao.BookingDao;
 import dao.MovieDao;
 import model.Booking;
 import model.Movie;
+import model.MovieAndBooking;
 
 public class BookingService {
 	private BookingDao bookingDao;
@@ -64,5 +65,9 @@ public class BookingService {
 	public void deleteByMovieId(Integer id) {
 		bookingDao.deleteByMovieId(id);
 		
+	}
+	
+	public List<MovieAndBooking> getMovieAndBooking(List<Booking> bookings){
+		return bookings.stream().map(booking -> new MovieAndBooking(movieService.findMovie(booking.getMovieId()), booking)).collect(Collectors.toList());
 	}
 }
