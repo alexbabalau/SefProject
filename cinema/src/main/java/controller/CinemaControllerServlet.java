@@ -82,7 +82,7 @@ public class CinemaControllerServlet extends HttpServlet {
 								break;
 			case "BOOK" : handleBookRequest(request, response);
 						break;
-			case "BOOK_MOVIE" : handleBookMovieRequest(request, response);
+			case "BOOK-MOVIE" : handleBookMovieRequest(request, response);
 								break;
 			
 		}
@@ -235,7 +235,7 @@ public class CinemaControllerServlet extends HttpServlet {
 	private void handleBookRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		RequestDispatcher requestDispatcher = null;
 		int id = Integer.parseInt(request.getParameter("id"));
-		int places = Integer.parseInt(request.getParameter("selectedPlaces"));
+		int places = Integer.parseInt(request.getParameter("selectedSeats"));
 		
 		Movie movie = movieService.findMovie(id);
 		String username = (String) (request.getServletContext().getAttribute("username"));
