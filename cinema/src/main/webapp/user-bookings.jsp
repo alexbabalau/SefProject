@@ -16,6 +16,8 @@
 			<br><br>
 		<div id = "container">
 			<div id = "content">
+				<input type = "button" value = "Home" 
+					onclick = "window.location.href = 'CinemaControllerServlet?command=HOME'; return false"/>
 				<input type = "button" value = "Cinemas" 
 					onclick = "window.location.href = 'CinemaControllerServlet?command=SEE-CINEMAS'; return false"/>
 					
