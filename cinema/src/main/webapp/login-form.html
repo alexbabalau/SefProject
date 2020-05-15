@@ -1,23 +1,33 @@
 <html>
 
-<head><title>Login</title></head>
+<head>
+	<link type="text/css" rel="stylesheet" href="css/styles.css" >
+	<link type="text/css" rel="stylesheet" href="css/buttonsstyle.css" >
+</head>
 
 <body>
-
-<form action="CinemaControllerServlet">
-	Username : <input type = "text" name = "username" />
-	
-	<br/><br/>
-	
-	Password : <input type = "text" name = "password" />
-	
-	<br/><br/>
-	
-	<input type = "hidden" name = "command" value = "LOGIN" />
-	
-	<input type = "submit" value = "Submit"/>
-</form>
-
+	<div id = "wrapper">
+		<div id = "header">
+			<h2>Login</h2>
+		</div>
+		<div id = "container">
+			<div id = "content">
+				<form action="CinemaControllerServlet">
+					Username : <input type = "text" name = "username" />
+					
+					<br/><br/>
+					
+					Password : <input type = "text" name = "password" />
+					
+					<br/><br/>
+					
+					<input type = "hidden" name = "command" value = "LOGIN" />
+					
+					<input type = "submit" value = "Submit"/>
+				</form>
+			</div>
+		</div>
+	</div>
 </body>
 
 </html>
