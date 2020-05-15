@@ -5,6 +5,15 @@
 	<h1>Movie List</h1>
 	<a href="CinemaControllerServlet?command=LOGOUT">Logout</a>
 	<hr>
+	
+	<br><br>
+	
+	<input type = "button" value = "Home" 
+		onclick = "window.location.href = 'CinemaControllerServlet?command=HOME'; return false"/>
+	
+	<br><br>
+	
+	<hr>
 		
 	<br><br>
 	

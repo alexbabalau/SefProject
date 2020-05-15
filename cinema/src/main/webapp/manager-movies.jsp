@@ -12,6 +12,10 @@
 	
 	<input type = "button" value = "Add new movie" 
 		onclick = "window.location.href = 'movie-form.html'; return false"/>
+	
+	<br><br>
+	
+	<hr>
 		
 	<br><br>
 	

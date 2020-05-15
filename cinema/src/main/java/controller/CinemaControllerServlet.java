@@ -109,6 +109,8 @@ public class CinemaControllerServlet extends HttpServlet {
 							break;
 			case "SEE-CINEMAS" : handleSeeCinemasRequest(request, response);
 								break;
+			case "HOME" : handleHomeRequest(request, response);
+						break;
 		}
 	}
 
@@ -483,6 +485,26 @@ public class CinemaControllerServlet extends HttpServlet {
 		
 		request.setAttribute("booking_list", movieBooking);
 		requestDispatcher = request.getRequestDispatcher("user-bookings.jsp");
+		
+		requestDispatcher.forward(request, response);
+	}
+	
+	private void handleHomeRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		RequestDispatcher requestDispatcher = null;
+		
+		String username = (String) (request.getServletContext().getAttribute("username"));
+		
+		switch(userService.getRole(username)) {
+			case "admin": request.setAttribute("manager_list", requestService.getRequests());
+					  	requestDispatcher = request.getRequestDispatcher("admin-requests.jsp");
+					  	break;
+			case "manager" : request.setAttribute("movie_list", movieService.getMoviesFromCinema(userService.getCinema(username)));
+							requestDispatcher = request.getRequestDispatcher("manager-movies.jsp");
+							break;
+			default:request.setAttribute("manager_list", userService.getManagers()); 
+					requestDispatcher = request.getRequestDispatcher("select-cinema.jsp");
+		
+		}
 		
 		requestDispatcher.forward(request, response);
 	}

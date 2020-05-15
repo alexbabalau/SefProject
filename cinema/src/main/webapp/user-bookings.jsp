@@ -7,10 +7,15 @@
 	<hr>
 	<br><br>
 	
+	<input type = "button" value = "Home" 
+		onclick = "window.location.href = 'CinemaControllerServlet?command=HOME'; return false"/>
+	
 	<input type = "button" value = "Cinemas" 
 		onclick = "window.location.href = 'CinemaControllerServlet?command=SEE-CINEMAS'; return false"/>
-		
+	
 	<br><br>
+	
+	<hr>
 	
 	<table border = "1">
 	
