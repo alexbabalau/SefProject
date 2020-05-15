@@ -13,12 +13,13 @@
 		</div>
 		<div id = "container">
 			<div id = "content">
+				<br>
 				<a href="CinemaControllerServlet?command=LOGOUT">Logout</a>
 				<hr>
 				
 				<input class = "button" type = "button" value = "View Bookings" 
 					onclick = "window.location.href = 'CinemaControllerServlet?command=MANAGER-BOOKING'; return false"/>
-				<br><br>
+				<br>
 				
 				<input class = "button" type = "button" value = "Add new movie" 
 					onclick = "window.location.href = 'movie-form.html'; return false"/>

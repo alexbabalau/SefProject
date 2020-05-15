@@ -14,6 +14,7 @@
 		</div>
 		<div id = "container">
 			<div id = "content">
+				<br>
 				<a href="CinemaControllerServlet?command=LOGOUT">Logout</a>
 				<hr>
 					

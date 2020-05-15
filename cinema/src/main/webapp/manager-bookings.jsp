@@ -13,11 +13,16 @@
 		</div>
 		<div id = "container">
 			<div id = "content">
+				<br>
 				<c:url var = "logout" value = "CinemaControllerServlet">
 					<c:param name="command" value = "LOGOUT"/>
 				</c:url>
 				<a href = "${logout}">Logout</a>
 				<hr>
+				
+				<input class = "button" type = "button" value = "See Movies" 
+					onclick = "window.location.href = 'CinemaControllerServlet?command=HOME'; return false"/>
+				
 				<br><br>
 				
 				<table border = "1">

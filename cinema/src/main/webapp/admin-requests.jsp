@@ -13,6 +13,7 @@
 		<div id = "header">
 			<h2>Admin requests</h2>
 		</div>
+		<br>
 		<a href="CinemaControllerServlet?command=LOGOUT">Logout</a>
 		
 		<div id="container">
