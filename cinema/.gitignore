@@ -26,6 +26,7 @@ Gitignore for Java,maven,Eclipse,Spring
 .sts4-cache
 
 .settings/*
+.extract/*
 
 # Created by https://www.gitignore.io/api/git,java,maven,eclipse,windows
 
