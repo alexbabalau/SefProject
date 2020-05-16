@@ -12,7 +12,7 @@
   	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   	<maven.compiler.target>1.8</maven.compiler.target>
   	<maven.compiler.source>1.8</maven.compiler.source>
-  	<tomcat7-maven-plugin.version>2.2</tomcat7-maven-plugin.version>
+  	<tomcat7-maven-plugin.version>2.1</tomcat7-maven-plugin.version>
   </properties>
   
   <dependencies>
@@ -32,7 +32,6 @@
     	<groupId>javax.servlet</groupId>
     	<artifactId>jstl</artifactId>
     	<version>1.2</version>
-    	<scope>provided</scope>
 	</dependency>
     <dependency>
     	<groupId>com.googlecode.json-simple</groupId>
@@ -75,6 +74,5 @@
                 </executions>
             </plugin>
         </plugins>
-        <finalName>cinema</finalName>
     </build>
 </project>
