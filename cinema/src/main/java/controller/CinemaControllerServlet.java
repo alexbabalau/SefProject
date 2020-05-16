@@ -81,7 +81,6 @@ public class CinemaControllerServlet extends HttpServlet {
 		response.setHeader("Pragma", "no-cache"); // HTTP 1.0.
 		response.setDateHeader("Last-Modified", (new Date()).getTime() );
 		
-		System.out.println("Command: " + command);
 		
 		switch(command) {
 			case "LOGIN": handleLoginRequest(request, response);
@@ -122,19 +121,19 @@ public class CinemaControllerServlet extends HttpServlet {
 	}
 
 	private void handleLogoutRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		System.out.println("In logout");
+		
 		
 		
 		String username = (String) getServletContext().getAttribute("username");
 		RequestDispatcher requestDispatcher = null;
 		
-		System.out.println("logout 1: " + username);
+		
 		
 		getServletContext().setAttribute("username", null);
 		
 		username = (String) getServletContext().getAttribute("username");
 		
-		System.out.println("logout 2: " + username);
+		
 		
 		
 		
@@ -152,8 +151,7 @@ public class CinemaControllerServlet extends HttpServlet {
 		
 		List<Booking> bookingsFromCinema = bookingService.getBookingsFromCinema(cinema);
 		
-		System.out.println(bookingsFromCinema);
-		System.out.println(movieService.getMovies());
+		
 		request.setAttribute("movie_booking_and_user_list", bookingService.getMovieBookingAndUser(bookingsFromCinema));
 		
 		requestDispatcher = request.getRequestDispatcher("manager-bookings.jsp");
@@ -163,7 +161,7 @@ public class CinemaControllerServlet extends HttpServlet {
 
 	private void handleLoginRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String username = (String) getServletContext().getAttribute("username");
-		System.out.println("login : " + username);
+		
 		RequestDispatcher requestDispatcher = null;
 		
 		username = request.getParameter("username");
@@ -420,7 +418,6 @@ public class CinemaControllerServlet extends HttpServlet {
 
 		List<MovieAndBooking> movieBooking = bookingService.getMovieAndBooking(bookings);
 		
-		System.out.println(bookingService.getBookings());
 		
 		request.setAttribute("booking_list", movieBooking);
 		requestDispatcher = request.getRequestDispatcher("user-bookings.jsp");

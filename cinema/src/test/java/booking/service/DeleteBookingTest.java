@@ -2,6 +2,7 @@ package booking.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -44,5 +45,11 @@ public class DeleteBookingTest {
 		bookingService.deleteBooking(booking.getId());
 		
 		assertEquals(100, movieService.findMovie(m1.getId()).getFreeSeats());
+	}
+	
+	@AfterEach
+	public void destroy() {
+		movieService.close();
+		bookingService.close();
 	}
 }

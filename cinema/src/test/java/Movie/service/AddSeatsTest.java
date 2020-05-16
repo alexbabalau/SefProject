@@ -2,6 +2,7 @@ package Movie.service;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -38,5 +39,10 @@ public class AddSeatsTest {
 		
 		assertEquals(movieService.findMovie(m2.getId()).getFreeSeats(), seats);
 		
+	}
+	
+	@AfterEach
+	public void destroy() {
+		movieService.close();
 	}
 }

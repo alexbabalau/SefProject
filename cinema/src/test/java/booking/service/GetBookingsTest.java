@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -60,5 +61,11 @@ public class GetBookingsTest {
 		bookings.remove(1);
 		
 		assertEquals(bookings, bookingService.getBookings());
+	}
+	
+	@AfterEach
+	public void destroy() {
+		movieService.close();
+		bookingService.close();
 	}
 }

@@ -2,6 +2,7 @@ package dao;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,6 +37,8 @@ public class BookingDao {
 		}
 		return instance;
 	}
+	
+	
 	
 	public void addBooking(Booking booking) {
 		JSONObject obj = new JSONObject();
@@ -89,6 +92,7 @@ public class BookingDao {
 	
 	public void close() {
 		myFile.delete();
+		instance = null;
 	}
 
 	public void deleteByMovieId(Integer id) {

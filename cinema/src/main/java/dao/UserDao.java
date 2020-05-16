@@ -160,6 +160,7 @@ public class UserDao {
 	
 	public void close() {
 		myFile.delete();
+		instance = null;
 	}
 	
 }

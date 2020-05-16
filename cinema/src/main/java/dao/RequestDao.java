@@ -41,6 +41,7 @@ public class RequestDao {
 	
 	public void close() {
 		myFile.delete();
+		instance = null;
 	}
 	
 	public void addRequest(Manager manager) {

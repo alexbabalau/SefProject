@@ -5,6 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -34,6 +35,8 @@ public class GetBookingsFromUsernameTest {
 		movieService.addMovie(m2);
 		movieService.addMovie(m3);
 		
+		System.out.println(bookingService.getBookings());
+		
 		Booking booking1 = new Booking("alex", m1.getId(), 10);
 		Booking booking2 = new Booking("alex", m2.getId(), 10);
 		Booking booking3 = new Booking("daria", m3.getId(), 10);
@@ -52,5 +55,11 @@ public class GetBookingsFromUsernameTest {
 		
 		assertEquals(bookings, bookingService.getBookingsFromUsername("alex"));
 		
+	}
+	
+	@AfterEach
+	public void destroy() {
+		movieService.close();
+		bookingService.close();
 	}
 }

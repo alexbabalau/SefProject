@@ -57,5 +57,6 @@ public class UserService {
 	
 	public void close() {
 		userDao.close();
+		instance = null;
 	}
 }

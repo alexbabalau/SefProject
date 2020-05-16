@@ -52,6 +52,8 @@ public class BookingService {
 		bookingDao.deleteBooking(id);
 	}
 	
+	
+	
 	public List<Booking> getBookings(){
 		return bookingDao.getBookings();
 	}
@@ -64,6 +66,7 @@ public class BookingService {
 	
 	public void close() {
 		bookingDao.close();
+		instance = null;
 	}
 
 	public void deleteByMovieId(Integer id) {

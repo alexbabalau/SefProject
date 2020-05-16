@@ -3,6 +3,7 @@ package booking.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -58,6 +59,12 @@ public class AddBookingTest {
 		
 		assertThrows(NotEnoughSeatsException.class, () -> bookingService.addBooking(booking));
 		
+	}
+	
+	@AfterEach
+	public void destroy() {
+		movieService.close();
+		bookingService.close();
 	}
 	
 }

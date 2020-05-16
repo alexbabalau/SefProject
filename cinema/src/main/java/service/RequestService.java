@@ -42,6 +42,7 @@ public class RequestService {
 	
 	public void close() {
 		requestDao.close();
+		instance = null;
 	}
 	
 	public List<Manager> getRequests(){

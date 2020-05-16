@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Before;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -35,6 +36,11 @@ public class SelectMovieByIdTest {
 		assertEquals(m2, movieDao.findMovie(m2.getId()));
 		
 		
+	}
+	
+	@AfterEach
+	public void destroy() {
+		movieDao.close();
 	}
 	
 }

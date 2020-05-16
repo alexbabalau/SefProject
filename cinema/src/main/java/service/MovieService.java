@@ -59,5 +59,6 @@ public class MovieService {
 	
 	public void close() {
 		movieDao.close();
+		instance = null;
 	}
 }
