@@ -1,50 +1,70 @@
 <html>
+
+<head>
+	<link type="text/css" rel="stylesheet" href="css/styles.css" >
+	<link type="text/css" rel="stylesheet" href="css/buttonsstyle.css" >
+</head>
+	
+		
 <body>
+	<div id = "wrapper">
+		<div id = "header">		
+			<h2>Register</h2>
+		</div>
+			<hr>
+			
+			<br><br>
+		<div id = "container">	
+			<div id = "content">
+				<form action="CinemaControllerServlet">
+				
+					Username : <input type = "text" name = "username" />
+					
+					<br/><br/>
+					
+					Password : <input type = "password" name = "password" />
+					
+					<br/><br/>
+					
+					Name : <input type = "text" name = "name" />
+					
+					<br/><br/>
+					
+					Phone : <input type = "text" name = "phone" />
+					
+					<br/><br/>
+					
+					Email : <input type = "text" name = "email" />
+					
+					<br/><br/>
+					
+					Role : 
+					
+					<select name = "role">
+						<option>regular</option>
+						<option>manager</option>
+					</select>
+					
+					<br><br>
+					
+					Cinema Name : <input type = "text" name = "cinemaName" value = "Valid just for manager accounts"/>
+					
+					<br/><br/>
+					
+					<input type = "hidden" name = "command" value = "REGISTER" />
+					
+					<input type = "submit" value = "Submit"/>
+				</form>
+			</div>
+		</div>
+	</div>
 
-<h1>Register</h1>
-<hr>
-
-<br><br>
-
-<form action="CinemaControllerServlet">
-
-	Username : <input type = "text" name = "username" />
-	
-	<br/><br/>
-	
-	Password : <input type = "password" name = "password" />
-	
-	<br/><br/>
-	
-	Name : <input type = "text" name = "name" />
-	
-	<br/><br/>
-	
-	Phone : <input type = "text" name = "phone" />
-	
-	<br/><br/>
-	
-	Email : <input type = "text" name = "email" />
-	
-	<br/><br/>
-	
-	Role : 
-	
-	<select name = "role">
-		<option>regular</option>
-		<option>manager</option>
-	</select>
-	
 	<br><br>
 	
-	Cinema Name : <input type = "text" name = "cinemaName" value = "Valid just for manager accounts"/>
+	<input type = "button" value = "Login" 
+		onclick = "window.location.href = 'CinemaControllerServlet?command=LOGIN'; return false"/>
 	
-	<br/><br/>
-	
-	<input type = "hidden" name = "command" value = "REGISTER" />
-	
-	<input type = "submit" value = "Submit"/>
-</form>
+	<br><br>
 
 </body>
 </html>

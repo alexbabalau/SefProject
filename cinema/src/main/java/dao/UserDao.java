@@ -11,7 +11,10 @@ import java.net.URL;
 import java.nio.file.Paths;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -90,9 +93,7 @@ public class UserDao {
 	
 	
 	
-	
-	public User selectByUsername(String username) {
-		JSONObject user = getUser(username);
+	private User getUserFromJSON(JSONObject user) {
 		if(((String)user.get("role")).equals("admin")) {
 			return new Admin((String)user.get("username"), (String)user.get("password"), (String)user.get("phone"), (String)user.get("name"), (String)user.get("email"));
 		}
@@ -104,6 +105,26 @@ public class UserDao {
 		}
 		return null;
 	}
+	
+	public User selectByUsername(String username) {
+		JSONObject user = getUser(username);
+		
+		
+		return getUserFromJSON(user);
+	}
+	
+	public List<User> getUsers(){
+		List<User> userList = new ArrayList<>();
+		
+		JSONArray users = JSONUtils.getEntriesJSON(path);
+		
+		for(int i = 0; i < users.size(); i++) {
+			userList.add(getUserFromJSON((JSONObject)users.get(i)));
+		}
+		
+		return userList;
+	}
+	
 	
 	private JSONObject getUser(String username) {
 		JSONArray users = JSONUtils.getEntriesJSON(path);
@@ -139,6 +160,7 @@ public class UserDao {
 	
 	public void close() {
 		myFile.delete();
+		instance = null;
 	}
 	
 }

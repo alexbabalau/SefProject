@@ -1,37 +1,50 @@
 <html>
+
+<head>
+	<link type="text/css" rel="stylesheet" href="css/styles.css" >
+	<link type="text/css" rel="stylesheet" href="css/buttonsstyle.css" >
+</head>
+
+
 <body>
-
-<h1>New Movie</h1>
-<hr>
-
-<br><br>
-
-<form action="CinemaControllerServlet">
-
-	Title : <input type = "text" name = "title" />
-	
-	<br/><br/>
-	
-	Start hour : <input type = "number" name = "startHour" />
-	
-	<br/><br/>
-	
-	End hour : <input type = "number" name = "endHour" />
-	
-	<br/><br/>
-	
-	Seats number : <input type = "number" name = "freeSeats" />
-	
-	<br/><br/>
-	
-	One ticket price : <input type = "number" name = "price" />
-	
-	<br/><br/>
-	
-	<input type = "hidden" name = "command" value = "ADDMOVIE" />
-	
-	<input type = "submit" value = "Submit"/>
-</form>
-
+	<div id = "wrapper">			
+		<div id = "header">
+			<h2>New Movie</h2>
+		</div>
+		<div id = "container">
+			<div id = "content">
+				<hr>
+				
+				<br><br>
+				
+				<form action="CinemaControllerServlet">
+				
+					Title : <input type = "text" name = "title" />
+					
+					<br/><br/>
+					
+					Start hour : <input type = "number" name = "startHour" />
+					
+					<br/><br/>
+					
+					End hour : <input type = "number" name = "endHour" />
+					
+					<br/><br/>
+					
+					Seats number : <input type = "number" name = "freeSeats" />
+					
+					<br/><br/>
+					
+					One ticket price : <input type = "number" step = "0.01" name = "price" />
+					
+					<br/><br/>
+					
+					<input type = "hidden" name = "command" value = "ADDMOVIE" />
+					
+					<input type = "submit" value = "Submit"/>
+				</form>
+			</div>
+		</div>
+	</div>
 </body>
 </html>

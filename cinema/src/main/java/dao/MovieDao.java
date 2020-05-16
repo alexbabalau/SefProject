@@ -88,4 +88,9 @@ public class MovieDao {
 		}
 		return null;
 	}
+	
+	public void close() {
+		myFile.delete();
+		instance = null;
+	}
 }

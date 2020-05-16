@@ -4,25 +4,19 @@
 
 <head>
 	<link type="text/css" rel="stylesheet" href="css/styles.css" >
+	<link type="text/css" rel="stylesheet" href="css/buttonsstyle.css" >
 </head>
 
 <body>
 	<div id = "wrapper">
 		<div id = "header">
-			<h2>Movies</h2>
+			<h2>Movie List</h2>
 		</div>
 		<div id = "container">
 			<div id = "content">
 				<br>
 				<a href="CinemaControllerServlet?command=LOGOUT">Logout</a>
 				<hr>
-				
-				<input class = "button" type = "button" value = "View Bookings" 
-					onclick = "window.location.href = 'CinemaControllerServlet?command=MANAGER-BOOKING'; return false"/>
-				<br>
-				
-				<input class = "button" type = "button" value = "Add new movie" 
-					onclick = "window.location.href = 'movie-form.html'; return false"/>
 					
 				<br><br>
 				
@@ -36,19 +30,13 @@
 					<th>Free seats</th>
 					<th>Ticket price</th>
 					<th></th>
-					<th></th>
 					
 				</tr>
-				
+			
 					<c:forEach var="tempMovie" items="<%= request.getAttribute(\"movie_list\") %>"> 
 					
-						<c:url var = "update" value = "CinemaControllerServlet">
-							<c:param name = "command" value = "UPDATE-MOVIE"/>
-							<c:param name = "id" value = "${tempMovie.id }"/>
-						</c:url>
-						
-						<c:url var = "delete" value = "CinemaControllerServlet">
-							<c:param name = "command" value = "DELETE-MOVIE"/>
+						<c:url var = "booking" value = "CinemaControllerServlet">
+							<c:param name="command" value = "BOOK-MOVIE"/>
 							<c:param name = "id" value = "${tempMovie.id }"/>
 						</c:url>
 				
@@ -58,8 +46,7 @@
 							<td>${tempMovie.endHour}</td>
 							<td>${tempMovie.freeSeats}</td>
 							<td>${tempMovie.price}</td>
-							<td> <a href = "${update}">Update</a> </td>
-							<td> <a href = "${delete}">Delete</a> </td>
+							<td> <a href = "${booking}">Book</a> </td>
 						</tr>
 				
 					</c:forEach>
@@ -70,5 +57,6 @@
 			</div>
 		</div>
 	</div>
+
 </body>
 </html>

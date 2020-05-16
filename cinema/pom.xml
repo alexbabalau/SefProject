@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>com.sef</groupId>
   <artifactId>cinema</artifactId>
-  <packaging>jar</packaging>
+  <packaging>war</packaging>
   <version>1.0</version>
   <name>cinema Maven Webapp</name>
   <url>http://maven.apache.org</url>
@@ -12,6 +12,7 @@
   	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   	<maven.compiler.target>1.8</maven.compiler.target>
   	<maven.compiler.source>1.8</maven.compiler.source>
+  	<tomcat7-maven-plugin.version>2.1</tomcat7-maven-plugin.version>
   </properties>
   
   <dependencies>
@@ -43,7 +44,35 @@
   		<version>4.0.1</version>
   	</dependency>
   </dependencies>
-  <build>
-    <finalName>cinema</finalName>
-  </build>
+  
+  
+ <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-war-plugin</artifactId>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.tomcat.maven</groupId>
+                <artifactId>tomcat7-maven-plugin</artifactId>
+                <version>${tomcat7-maven-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>tomcat-run</id>
+                        <goals>
+                            <goal>exec-war-only</goal>
+                        </goals>
+                        <phase>package</phase>
+                        <configuration>
+                            <path>/</path>
+                            <enableNaming>false</enableNaming>
+                            <finalName>cine.jar</finalName>
+                            <charset>utf-8</charset>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 </project>
