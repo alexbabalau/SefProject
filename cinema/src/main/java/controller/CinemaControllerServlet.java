@@ -122,20 +122,12 @@ public class CinemaControllerServlet extends HttpServlet {
 
 	private void handleLogoutRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		
-		
-		
 		String username = (String) getServletContext().getAttribute("username");
 		RequestDispatcher requestDispatcher = null;
-		
-		
 		
 		getServletContext().setAttribute("username", null);
 		
 		username = (String) getServletContext().getAttribute("username");
-		
-		
-		
-		
 		
 		requestDispatcher = request.getRequestDispatcher("login-form.html");
 		requestDispatcher.forward(request, response);

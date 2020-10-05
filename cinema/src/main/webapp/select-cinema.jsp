@@ -2,6 +2,7 @@
  <%@ page isELIgnored="false"%>
 <html>
 <head>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
 	<link type="text/css" rel="stylesheet" href="css/styles.css" >
 	<link type="text/css" rel="stylesheet" href="css/buttonsstyle.css" >
 </head>
@@ -9,36 +10,52 @@
 
 <body>
 	<div id = "wrapper">
-		<div id = "header">
-				<h2>Cinema List</h2>
+		<div>
+			<nav class="navbar navbar-expand-sm bg-primary justify-content-between">
+				<div>
+					<span class="navbar-brand mb-0 h1"><h3><b>Cinemas</b></h3></span>
+				</div>
+				<div>
+					<a href="CinemaControllerServlet?command=LOGOUT" class="btn btn-outline-light" role="button">Logout</a>
+				</div>
+			</nav>
 		</div>
 		<div id = "container">
 			<div id = "content">
-				<br>
-				<a href="CinemaControllerServlet?command=LOGOUT">Logout</a>
 				<hr>
 				<br><br>
-				
-				<input type = "button" value = "My Bookings" 
-					onclick = "window.location.href = 'CinemaControllerServlet?command=SEE-BOOKINGS'; return false"/>
+				<div class = "row">
+					<input class="btn btn-outline-dark" type="button" value = "My Bookings" onclick = "window.location.href = 'CinemaControllerServlet?command=SEE-BOOKINGS'; return false" />
+				</div>
 					
 				<br><br>
 				
-				<form action="CinemaControllerServlet">
+				<p>Select a cinema</p>
 				
-				<select name = "cinema" >
+				<div class = "row">
 				
-					<c:forEach var="tempManager" items="<%= request.getAttribute(\"manager_list\") %>">
-						<option>${tempManager.cinema}</option>
-					</c:forEach>
-					
-				</select>
+					<div class = "col-6">
 				
-				<input type = "hidden" name = "command" value = "SEE-MOVIES" />
+					<form action="CinemaControllerServlet">
 				
-				<input type = "submit" value = "Submit"/>
+					<select class="custom-select" name = "cinema">
 				
-				</form>
+						<c:forEach var="tempManager" items="<%= request.getAttribute(\"manager_list\") %>">
+							<option>${tempManager.cinema}</option>
+						</c:forEach>
+  					
+					</select>
+				
+						<br><br>
+				
+							<input type = "hidden" name = "command" value = "SEE-MOVIES" />
+				
+							<input class="btn btn-outline-primary" type = "submit" value = "Submit"/>
+				
+					</form>
+				
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>

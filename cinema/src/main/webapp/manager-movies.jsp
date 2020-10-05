@@ -4,27 +4,33 @@
 
 <head>
 	<link type="text/css" rel="stylesheet" href="css/styles.css" >
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
 </head>
 
 <body>
 	<div id = "wrapper">
-		<div id = "header">
-			<h2>Movies</h2>
+		<div>
+			<nav class="navbar navbar-expand-sm bg-primary justify-content-between">
+				<div>
+					<span class="navbar-brand mb-0 h1"><h3><b>Cinema Movies</b></h3></span>
+				</div>
+				<div>
+					<a href="CinemaControllerServlet?command=LOGOUT" class="btn btn-outline-light" role="button">Logout</a>
+				</div>
+			</nav>
 		</div>
 		<div id = "container">
 			<div id = "content">
 				<br>
-				<a href="CinemaControllerServlet?command=LOGOUT">Logout</a>
-				<hr>
 				
-				<input class = "button" type = "button" value = "View Bookings" 
+				<input class="btn btn-outline-primary" type="button" value = "View Bookings" 
 					onclick = "window.location.href = 'CinemaControllerServlet?command=MANAGER-BOOKING'; return false"/>
-				<br>
+				<br><br>
 				
-				<input class = "button" type = "button" value = "Add new movie" 
+				<input class="btn btn-outline-primary" type="button" value = "Add new movie" 
 					onclick = "window.location.href = 'movie-form.html'; return false"/>
 					
-				<br><br>
+				<br>
 				
 				<table border = "1">
 				

@@ -4,26 +4,30 @@
 
 <head>
 	<link type="text/css" rel="stylesheet" href="css/styles.css" >
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
 </head>
 
 <body>
 	<div id = "wrapper">
-		<div id = "header">	
-			<h2>Bookings</h2>
+		<div>
+			<nav class="navbar navbar-expand-sm bg-primary justify-content-between">
+				<div>
+					<span class="navbar-brand mb-0 h1"><h3><b>Manager Bookings</b></h3></span>
+				</div>
+				<div>
+					<a href="CinemaControllerServlet?command=LOGOUT" class="btn btn-outline-light" role="button">Logout</a>
+				</div>
+			</nav>
 		</div>
+		
 		<div id = "container">
 			<div id = "content">
 				<br>
-				<c:url var = "logout" value = "CinemaControllerServlet">
-					<c:param name="command" value = "LOGOUT"/>
-				</c:url>
-				<a href = "${logout}">Logout</a>
-				<hr>
 				
-				<input class = "button" type = "button" value = "See Movies" 
+				<input class="btn btn-outline-primary" type="button" value = "See Movies" 
 					onclick = "window.location.href = 'CinemaControllerServlet?command=HOME'; return false"/>
 				
-				<br><br>
+				<br>
 				
 				<table border = "1">
 				
