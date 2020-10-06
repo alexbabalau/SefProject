@@ -13,7 +13,7 @@
 		<div>
 			<nav class="navbar navbar-expand-sm bg-primary justify-content-between">
 				<div>
-					<span class="navbar-brand mb-0 h1"><h3><b>Admin Requests</b></h3></span>
+					<span class="navbar-brand mb-0 h1 text-light"><h3><b>Admin Requests</b></h3></span>
 				</div>
 				<div>
 					<a href="CinemaControllerServlet?command=LOGOUT" class="btn btn-outline-light" role="button">Logout</a>

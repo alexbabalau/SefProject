@@ -12,7 +12,7 @@
 		<div>
 			<nav class="navbar navbar-expand-sm bg-primary justify-content-between">
 				<div>
-					<span class="navbar-brand mb-0 h1"><h3><b>Manager Bookings</b></h3></span>
+					<span class="navbar-brand mb-0 h1 text-light"><h3><b>Manager Bookings</b></h3></span>
 				</div>
 				<div>
 					<a href="CinemaControllerServlet?command=LOGOUT" class="btn btn-outline-light" role="button">Logout</a>
@@ -29,18 +29,19 @@
 				
 				<br>
 				
-				<table border = "1">
-				
+				<table class = "table table-striped table-primary">
+				<thead>
 				<tr>
-					<th>Name</th>
-					<th>Title</th>
-					<th>Start hour</th>
-					<th>End hour</th>
-					<th>Booked seats</th>
-					<th>Price</th>
+					<th scope = "col">Name</th>
+					<th scope = "col">Title</th>
+					<th scope = "col">Start hour</th>
+					<th scope = "col">End hour</th>
+					<th scope = "col">Booked seats</th>
+					<th scope = "col">Price</th>
 					
 				</tr>
-				
+				</thead>
+				<tbody>
 					<c:forEach var="tempMovieBookingAndUser" items="<%= request.getAttribute(\"movie_booking_and_user_list\") %>"> 
 				
 						<tr>
@@ -55,7 +56,7 @@
 					</c:forEach>
 					
 					<br><br>
-				
+				</tbody>
 				</table>
 			</div>
 		</div>

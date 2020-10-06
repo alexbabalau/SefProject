@@ -13,7 +13,7 @@
 		<div>
 			<nav class="navbar navbar-expand-sm bg-primary justify-content-between">
 				<div>
-					<span class="navbar-brand mb-0 h1"><h3><b>Cinemas</b></h3></span>
+					<span class="navbar-brand mb-0 h1 text-light"><h3><b>Cinemas</b></h3></span>
 				</div>
 				<div>
 					<a href="CinemaControllerServlet?command=LOGOUT" class="btn btn-outline-light" role="button">Logout</a>
@@ -22,9 +22,8 @@
 		</div>
 		<div id = "container">
 			<div id = "content">
-				<hr>
 				<br><br>
-				<div class = "row">
+				<div >
 					<input class="btn btn-outline-dark" type="button" value = "My Bookings" onclick = "window.location.href = 'CinemaControllerServlet?command=SEE-BOOKINGS'; return false" />
 				</div>
 					

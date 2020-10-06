@@ -5,12 +5,15 @@
 <head>
 	<link type="text/css" rel="stylesheet" href="css/styles.css" >
 	<link type="text/css" rel="stylesheet" href="css/buttonsstyle.css" >
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
 </head>
 
 <body>
 	<div id = "wrapper">
-		<div id = "header">
-			<h2>Update Movie</h2>
+		<div>
+			<nav class="navbar navbar-dark bg-primary">
+  				<span class="navbar-brand mb-0 h1"><h3><b>Update Movie</b></h3></span>
+			</nav>
 		</div>
 			<hr>
 			
@@ -42,7 +45,7 @@
 					<input type = "hidden" name = "command" value = "ADDMOVIEID" />
 					<input type = "hidden" name = "id" value = "${movie.id}" />
 					
-					<input type = "submit" value = "Submit"/>
+					<input class="btn btn-outline-primary" type = "submit" value = "Submit"/>
 				</form>
 			</div>
 		</div>
