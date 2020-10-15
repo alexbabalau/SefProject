@@ -84,6 +84,6 @@ public class BookingService {
 	}
 	
 	public List<MovieBookingAndUser> getMovieBookingAndUser(List<Booking> bookings){
-		return bookings.stream().map(booking -> new MovieBookingAndUser(movieService.findMovie(booking.getMovieId()), booking, userDao.selectByUsername(booking.getUsername()))).collect(Collectors.toList());
+		return bookings.stream().map(booking -> new MovieBookingAndUser(movieService.findMovie(booking.getMovieId()), booking, userDao.getUser(booking.getUsername()))).collect(Collectors.toList());
 	}
 }

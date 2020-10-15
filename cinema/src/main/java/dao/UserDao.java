@@ -1,34 +1,215 @@
 package dao;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.file.Paths;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.stream.Collectors;
 
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+import javax.annotation.Resource;
+import javax.sql.DataSource;
 
+import model.User;
 import model.Admin;
 import model.Manager;
 import model.Regular;
-import model.User;
 
 public class UserDao {
+	public static UserDao instance = null;
 	
+	@Resource(name="jdbc/cinema_tracker")
+	private DataSource dataSource;
 	
+	public static UserDao getInstance() {
+		if(instance == null) {
+			instance = new UserDao();
+		}
+		return instance;
+	}
+	
+	/**
+	 * returns all the users form DB 
+	 * 
+	 * @return List<User>
+	 * @throws Exception
+	 */
+	public List<User> getUsers() throws Exception {
+		List<User> users = new ArrayList<User>();
+		
+		Connection myConnection = null;
+		Statement myStatement = null;
+		ResultSet myResult = null;
+		
+		try {
+			User tempUser = null;
+			
+			myConnection = dataSource.getConnection();
+			myStatement = myConnection.createStatement();
+			
+			String selectQuery = "select * from user";
+			
+			myResult = myStatement.executeQuery(selectQuery);
+			
+			while(myResult.next()) {
+				String username = myResult.getString("username");
+				String password = myResult.getString("password");
+				String phone = myResult.getString("phone");
+				String name = myResult.getString("name");
+				String email = myResult.getString("email");
+				String role = myResult.getString("role");
+				
+				if("m".equals(role))
+					tempUser = new Manager(username, password, phone, name, email, "");
+				if("r".equals(role))
+					tempUser = new Regular(username, password, phone, name, email);
+				if("a".equals(role))
+					tempUser = new Admin(username, password, phone, name, email);
+				
+				users.add(tempUser);
+			}
+			
+			return users;
+		}
+		catch(Exception exception) {
+			exception.printStackTrace();
+		}
+		finally {
+			close(myConnection, myStatement, myResult);
+		}
+		
+		return users;
+	}
+	
+	/**
+	 * adds a user into DB
+	 * @param user
+	 * @param isEncrypted
+	 */
+	public void addUser(User user, boolean isEncrypted){
+		String password = user.getPassword();
+		
+		if(!isEncrypted)
+			password = PasswordUtils.getPasswordEncrypted(password);
+		//System.out.println(user.getUsername() + " " + password);
+		
+		Connection myConnection = null;
+		Statement myStatement = null;
+		
+		try {
+			myConnection = dataSource.getConnection();
+			
+			String insertQuery = "insert into user"
+								+ "(username, password, name, email, phone, role)"
+								+ "values(?, ?, ?, ?, ?, ?)";
+			
+			myStatement = myConnection.prepareStatement(insertQuery);
+			
+			((PreparedStatement) myStatement).setString(1, user.getUsername());
+			((PreparedStatement) myStatement).setString(2, user.getPassword());
+			((PreparedStatement) myStatement).setString(3, user.getName());
+			((PreparedStatement) myStatement).setString(4, user.getEmail());
+			((PreparedStatement) myStatement).setString(5, user.getPhone());
+			
+			String role = user.getRole();
+			
+			((PreparedStatement) myStatement).setString(6, role);
+			
+			myStatement.execute(insertQuery);
+			
+			if("m".equals(role)) {
+				// add into cinema
+			}
+			
+		}
+		catch(Exception exception) {
+			exception.printStackTrace();
+		}
+		finally {
+			close(myConnection, myStatement, null);
+		}
+	}
+	/**
+	 * gets a user searched by username
+	 * @param username
+	 * @return User
+	 */
+	public User getUser(String username) {
+		List<User> users;
+		
+		try {
+			users = getUsers();
+			
+			Iterator<User> iterator = users.iterator();
+			
+			while(iterator.hasNext()) {
+				User tempUser = iterator.next();
+				if(tempUser.getUsername().contentEquals(username))
+					return tempUser;
+			}
+			
+			return null;
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+	
+	public boolean existUser(String username) {
+		User searchedUser = getUser(username);
+		
+		if(searchedUser != null)
+			return true;
+		
+		return false;
+	}
+	
+	public String getRole(String username) {
+		
+		User user = getUser(username);
+		
+		if(user == null)
+			return null;
+		
+		return user.getRole();
+	}
+	
+	public String getPassword(String username) {
+		
+		User user = getUser(username);
+		
+		if(user == null)
+			return null;
+		
+		return user.getPassword();
+	}
+	
+	/**
+	 * closes the connections
+	 * @param myConnection
+	 * @param myStatement
+	 * @param myResult
+	 */
+	private void close(Connection myConnection, Statement myStatement, ResultSet myResult) {
+		try {
+			if(myResult != null)
+				myResult.close();
+			if(myStatement != null)
+				myStatement.close();
+			if(myConnection != null)
+				myConnection.close();
+		}
+		catch(Exception exception) {
+			exception.printStackTrace();
+		}
+		
+	}
+}
+
+/*public class UserDao {
 	
 	private String path = "users5.json";
 	private File myFile;
@@ -89,9 +270,7 @@ public class UserDao {
 		}
 		return false;
 	}
-	
-	
-	
+		
 	
 	private User getUserFromJSON(JSONObject user) {
 		if(((String)user.get("role")).equals("admin")) {
@@ -163,4 +342,4 @@ public class UserDao {
 		instance = null;
 	}
 	
-}
+}*/
