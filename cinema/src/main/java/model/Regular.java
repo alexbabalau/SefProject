@@ -6,10 +6,12 @@ public class Regular extends User{
 		super(username, password, phone, name, email);
 	}
 	
-	
+	public Regular(int id, String username, String password, String phone, String name, String email) {
+		super(id, username, password, phone, name, email);
+	}
 	
 	@Override
-	public String getCinema() {
+	public Integer getCinemaId() {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -17,5 +19,10 @@ public class Regular extends User{
 	@Override
 	public String getRole() {
 		return "regular";
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		return super.equals(o);
 	}
 }

@@ -5,9 +5,12 @@ public class Admin extends User{
 		super(username, password, phone, name, email);
 	}
 
+	public Admin(int id, String username, String password, String phone, String name, String email) {
+		super(id, username, password, phone, name, email);
+	}
 	
 	@Override
-	public String getCinema() {
+	public Integer getCinemaId() {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -15,5 +18,10 @@ public class Admin extends User{
 	@Override
 	public String getRole() {
 		return "admin";
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		return super.equals(o);
 	}
 }

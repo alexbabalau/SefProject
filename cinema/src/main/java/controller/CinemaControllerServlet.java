@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.annotation.Resource;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -12,6 +13,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.sql.DataSource;
 
 import model.Admin;
 import model.Booking;
@@ -20,6 +22,7 @@ import model.Movie;
 import model.MovieAndBooking;
 import model.Regular;
 import service.BookingService;
+import service.CinemaService;
 import service.MovieService;
 import service.NotEnoughSeatsException;
 import service.RequestService;
@@ -30,6 +33,9 @@ import service.UserService;
  */
 public class CinemaControllerServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	
+	@Resource(name="jdbc/cinema_tracker")
+	private DataSource dataSource;
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -40,28 +46,30 @@ public class CinemaControllerServlet extends HttpServlet {
 	private MovieService movieService;
 	private BookingService bookingService;
 	private ServletContext servletContext;
+	private CinemaService cinemaService;
 	
 	@Override
 	public void init() throws ServletException {
 		super.init();
-		userService = UserService.getInstance();
-		movieService = MovieService.getInstance();
+		userService = UserService.getInstance(dataSource);
+		movieService = MovieService.getInstance(dataSource);
 		bookingService = BookingService.getInstance();
+		cinemaService = CinemaService.getInstance(dataSource);
 		
-		requestService = RequestService.getInstance();
+		userService.addUserTest();
+		
+		requestService = RequestService.getInstance(dataSource);
 		userService.addUser(new Admin("admin", "admin", "07xxxxxx", "Admin", "admin@admin.ro"), false);
 		
-		userService.addUser(new Manager("manager1", "manager1", "07xxxxx", "Manager1", "manager1@manager1.ro", "CineDaria"), false);
+		/*userService.addUser(new Manager("manager1", "manager1", "07xxxxx", "Manager1", "manager1@manager1.ro", "CineDaria"), false);
 		userService.addUser(new Manager("manager2", "manager2", "07xxxxx", "Manager2", "manager2@manager2.ro", "CineMax"), false);
-		userService.addUser(new Regular("daria", "daria", "07xxxxxx", "Daria", "daria@daria.ro"), false);
+		userService.addUser(new Regular("daria", "daria", "07xxxxxx", "Daria", "daria@daria.ro"), false);*/
 		
-		movieService.addMovie(new Movie("Movie1", 7, 8, 100, 30.0, "CineDaria"));
+		/*movieService.addMovie(new Movie("Movie1", 7, 8, 100, 30.0, "CineDaria"));
 		movieService.addMovie(new Movie("Movie2", 7, 8, 120, 30.0, "CineDaria"));
 		movieService.addMovie(new Movie("Movie3", 7, 8, 10, 30.0, "CineMax"));
 		movieService.addMovie(new Movie("Movie4", 7, 8, 1200, 30.0, "CineDaria"));
-		movieService.addMovie(new Movie("Movie5", 7, 8, 120, 30.0, "CineMax"));
-		
-		
+		movieService.addMovie(new Movie("Movie5", 7, 8, 120, 30.0, "CineMax"));*/
 	}
 	
     public CinemaControllerServlet() {
@@ -139,9 +147,9 @@ public class CinemaControllerServlet extends HttpServlet {
 		RequestDispatcher requestDispatcher = null;
 		
 		
-		String cinema = userService.getCinema(username);
+		Integer cinema = userService.getCinemaId(username);
 		
-		List<Booking> bookingsFromCinema = bookingService.getBookingsFromCinema(cinema);
+		List<Booking> bookingsFromCinema = bookingService.getBookingsFromCinema(cinemaId);
 		
 		
 		request.setAttribute("movie_booking_and_user_list", bookingService.getMovieBookingAndUser(bookingsFromCinema));
@@ -165,7 +173,7 @@ public class CinemaControllerServlet extends HttpServlet {
 				case "admin": request.setAttribute("manager_list", requestService.getRequests());
 							  requestDispatcher = request.getRequestDispatcher("admin-requests.jsp");
 							  break;
-				case "manager" : request.setAttribute("movie_list", movieService.getMoviesFromCinema(userService.getCinema(username)));
+				case "manager" : request.setAttribute("movie_list", movieService.getMoviesFromCinema(userService.getCinemaId(username)));
 								requestDispatcher = request.getRequestDispatcher("manager-movies.jsp");
 								break;
 				default:request.setAttribute("manager_list", userService.getManagers()); 
@@ -205,7 +213,7 @@ public class CinemaControllerServlet extends HttpServlet {
 
 		if (!userService.existUser(username)) {
 			switch(role) {
-				case "manager" : requestService.addRequest(new Manager(username, password, phone, name, email, cinemaName));
+				case "manager" : requestService.addRequest(new Manager(username, password, phone, name, email));
 					break;
 				case "regular" : userService.addUser(new Regular(username, password, phone, name, email), false);
 					break;		
@@ -259,11 +267,11 @@ public class CinemaControllerServlet extends HttpServlet {
 		
 		username = (String) (getServletContext().getAttribute("username"));
 		
-		String cinema = userService.getCinema(username);
+		int cinema = userService.getCinemaId(username);
 
 		movieService.addMovie(new Movie(title, startHour, endHour, freeSeats, price, cinema));
 		
-		request.setAttribute("movie_list", movieService.getMoviesFromCinema(userService.getCinema(username)));
+		request.setAttribute("movie_list", movieService.getMoviesFromCinema(userService.getCinemaId(username)));
 		requestDispatcher = request.getRequestDispatcher("manager-movies.jsp");
 		
 		requestDispatcher.forward(request, response);
@@ -283,11 +291,11 @@ public class CinemaControllerServlet extends HttpServlet {
 		
 		username = (String) (getServletContext().getAttribute("username"));
 		
-		String cinema = userService.getCinema(username);
+		int cinemaId = userService.getCinemaId(username);
 
-		movieService.addMovie(new Movie(id, title, startHour, endHour, freeSeats, price, cinema));
+		movieService.updateMovie(id, new Movie(title, startHour, endHour, freeSeats, price, cinemaId));
 		
-		request.setAttribute("movie_list", movieService.getMoviesFromCinema(userService.getCinema(username)));
+		request.setAttribute("movie_list", movieService.getMoviesFromCinema(userService.getCinemaId(username)));
 		requestDispatcher = request.getRequestDispatcher("manager-movies.jsp");
 		
 		requestDispatcher.forward(request, response);
@@ -322,10 +330,10 @@ public class CinemaControllerServlet extends HttpServlet {
 		
 		username = (String) (getServletContext().getAttribute("username"));
 		
-		String cinema = userService.getCinema(username);
+		Integer cinemaId = userService.getCinemaId(username);
 
 		
-		request.setAttribute("movie_list", movieService.getMoviesFromCinema(userService.getCinema(username)));
+		request.setAttribute("movie_list", movieService.getMoviesFromCinema(cinemaId));
 		requestDispatcher = request.getRequestDispatcher("manager-movies.jsp");
 		
 		requestDispatcher.forward(request, response);
@@ -336,9 +344,10 @@ public class CinemaControllerServlet extends HttpServlet {
 		String role = userService.getRole(username);
 		RequestDispatcher requestDispatcher = null;
 		
-		String cinema = request.getParameter("cinema");
+		String cinemaName = request.getParameter("cinema");
+		Integer cinemaId = cinemaService.getCinemaIdByName(cinemaName);
 		
-		request.setAttribute("movie_list", movieService.getMoviesFromCinema(cinema));
+		request.setAttribute("movie_list", movieService.getMoviesFromCinema(cinemaId));
 		requestDispatcher = request.getRequestDispatcher("select-movie.jsp");
 		
 		requestDispatcher.forward(request, response);
@@ -426,7 +435,7 @@ public class CinemaControllerServlet extends HttpServlet {
 			case "admin": request.setAttribute("manager_list", requestService.getRequests());
 					  	requestDispatcher = request.getRequestDispatcher("admin-requests.jsp");
 					  	break;
-			case "manager" : request.setAttribute("movie_list", movieService.getMoviesFromCinema(userService.getCinema(username)));
+			case "manager" : request.setAttribute("movie_list", movieService.getMoviesFromCinema(userService.getCinemaId(username)));
 							requestDispatcher = request.getRequestDispatcher("manager-movies.jsp");
 							break;
 			default:request.setAttribute("manager_list", userService.getManagers()); 

@@ -15,10 +15,10 @@ public class Movie {
 	
 	private double price;
 	
-	private String cinema;
+	private int cinema;
 
 	private static int nbObjects;
-	public Movie(String title, int startHour, int endHour, int freeSeats, double price, String cinema) {
+	public Movie(String title, int startHour, int endHour, int freeSeats, double price, int cinema) {
 		
 		nbObjects++;
 		this.id = nbObjects;
@@ -30,7 +30,7 @@ public class Movie {
 		this.cinema = cinema;
 	}
 	
-	public Movie(int id, String title, int startHour, int endHour, int freeSeats, double price, String cinema) {
+	public Movie(int id, String title, int startHour, int endHour, int freeSeats, double price, int cinema) {
 		
 		this.id = id;
 		this.title = title;
@@ -52,11 +52,8 @@ public class Movie {
 		if (getClass() != obj.getClass())
 			return false;
 		Movie other = (Movie) obj;
-		if (cinema == null) {
-			if (other.cinema != null)
+		if (cinema != other.cinema)
 				return false;
-		} else if (!cinema.equals(other.cinema))
-			return false;
 		if (endHour != other.endHour)
 			return false;
 		if (freeSeats != other.freeSeats)
@@ -81,11 +78,11 @@ public class Movie {
 				+ freeSeats + ", price=" + price + ", cinema=" + cinema + "]";
 	}
 
-	public String getCinema() {
+	public int getCinemaId() {
 		return cinema;
 	}
 
-	public void setCinema(String cinema) {
+	public void setCinemaId(int cinema) {
 		this.cinema = cinema;
 	}
 

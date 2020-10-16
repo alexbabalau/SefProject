@@ -7,21 +7,24 @@ import model.Movie;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.sql.DataSource;
+
 public class MovieService {
 	private MovieDao movieDao;
 	private BookingDao bookingDao;
 	
 	
 	private static MovieService instance;
+	private DataSource dataSource;
 	
-	private MovieService() {
-		movieDao = MovieDao.getInstance();
+	private MovieService(DataSource dataSource) {
+		movieDao = MovieDao.getInstance(dataSource);
 		bookingDao = BookingDao.getInstance();
 	}
 	
-	public static MovieService getInstance() {
+	public static MovieService getInstance(DataSource dataSource) {
 		if(instance == null) {
-			instance = new MovieService();
+			instance = new MovieService(dataSource);
 		}
 		return instance;
 	}
@@ -51,14 +54,18 @@ public class MovieService {
 		movieDao.addMovie(movie);
 	}
 	
-	public List<Movie> getMoviesFromCinema(String cinema){
+	public List<Movie> getMoviesFromCinema(Integer cinemaId){
 		List<Movie> movies = movieDao.getMovies();
 		
-		return movies.stream().filter(movie -> movie.getCinema().equals(cinema)).collect(Collectors.toList());
+		return movies.stream().filter(movie -> Integer.valueOf(movie.getCinemaId()).equals(cinemaId)).collect(Collectors.toList());
+	}
+	
+	public void updateMovie(Integer id, Movie movie) {
+		movieDao.updateMovie(id, movie);
 	}
 	
 	public void close() {
-		movieDao.close();
+		//movieDao.close();
 		instance = null;
 	}
 }

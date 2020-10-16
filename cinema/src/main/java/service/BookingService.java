@@ -3,6 +3,8 @@ package service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.sql.DataSource;
+
 import dao.BookingDao;
 import dao.MovieDao;
 import dao.UserDao;
@@ -16,11 +18,12 @@ public class BookingService {
 	private MovieService movieService;
 	private UserDao userDao;
 	private static BookingService instance;
+	private DataSource dataSource;
 	
 	private BookingService() {
 		bookingDao = BookingDao.getInstance();
-		movieService = MovieService.getInstance();
-		userDao = UserDao.getInstance();
+		movieService = MovieService.getInstance(dataSource);
+		userDao = UserDao.getInstance(dataSource);
 	}
 	
 	public static BookingService getInstance() {

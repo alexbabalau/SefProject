@@ -1,5 +1,7 @@
 package dao;
 
+import static org.junit.Assert.assertEquals;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -13,18 +15,24 @@ import javax.sql.DataSource;
 
 import model.User;
 import model.Admin;
+import model.Cinema;
 import model.Manager;
 import model.Regular;
 
 public class UserDao {
 	public static UserDao instance = null;
 	
-	@Resource(name="jdbc/cinema_tracker")
 	private DataSource dataSource;
+	private CinemaDao cinemaDao;
 	
-	public static UserDao getInstance() {
+	private UserDao(DataSource theDataSource) {
+		dataSource = theDataSource;
+		cinemaDao = CinemaDao.getInstance(theDataSource);
+	}
+	
+	public static UserDao getInstance(DataSource theDataSource) {
 		if(instance == null) {
-			instance = new UserDao();
+			instance = new UserDao(theDataSource);
 		}
 		return instance;
 	}
@@ -35,7 +43,7 @@ public class UserDao {
 	 * @return List<User>
 	 * @throws Exception
 	 */
-	public List<User> getUsers() throws Exception {
+	public List<User> getUsers() {
 		List<User> users = new ArrayList<User>();
 		
 		Connection myConnection = null;
@@ -53,6 +61,7 @@ public class UserDao {
 			myResult = myStatement.executeQuery(selectQuery);
 			
 			while(myResult.next()) {
+				int id = myResult.getInt("id");
 				String username = myResult.getString("username");
 				String password = myResult.getString("password");
 				String phone = myResult.getString("phone");
@@ -61,11 +70,11 @@ public class UserDao {
 				String role = myResult.getString("role");
 				
 				if("m".equals(role))
-					tempUser = new Manager(username, password, phone, name, email, "");
+					tempUser = new Manager(id, username, password, phone, name, email);
 				if("r".equals(role))
-					tempUser = new Regular(username, password, phone, name, email);
+					tempUser = new Regular(id, username, password, phone, name, email);
 				if("a".equals(role))
-					tempUser = new Admin(username, password, phone, name, email);
+					tempUser = new Admin(id, username, password, phone, name, email);
 				
 				users.add(tempUser);
 			}
@@ -95,7 +104,7 @@ public class UserDao {
 		//System.out.println(user.getUsername() + " " + password);
 		
 		Connection myConnection = null;
-		Statement myStatement = null;
+		PreparedStatement myStatement = null;
 		
 		try {
 			myConnection = dataSource.getConnection();
@@ -106,20 +115,24 @@ public class UserDao {
 			
 			myStatement = myConnection.prepareStatement(insertQuery);
 			
-			((PreparedStatement) myStatement).setString(1, user.getUsername());
-			((PreparedStatement) myStatement).setString(2, user.getPassword());
-			((PreparedStatement) myStatement).setString(3, user.getName());
-			((PreparedStatement) myStatement).setString(4, user.getEmail());
-			((PreparedStatement) myStatement).setString(5, user.getPhone());
+			String username = user.getUsername();
+			
+			myStatement.setString(1, username);
+			myStatement.setString(2, user.getPassword());
+			myStatement.setString(3, user.getName());
+			myStatement.setString(4, user.getEmail());
+			myStatement.setString(5, user.getPhone());
 			
 			String role = user.getRole();
 			
-			((PreparedStatement) myStatement).setString(6, role);
+			myStatement.setString(6, role);
 			
-			myStatement.execute(insertQuery);
+			myStatement.execute();
 			
 			if("m".equals(role)) {
 				// add into cinema
+				Cinema newCinema = new Cinema(getUserId(username), "name");
+				cinemaDao.addCinema(newCinema);
 			}
 			
 		}
@@ -158,6 +171,11 @@ public class UserDao {
 		return null;
 	}
 	
+	/**
+	 * searches for a user by username and returns true if exists of false otherwise
+	 * @param username
+	 * @return boolean
+	 */
 	public boolean existUser(String username) {
 		User searchedUser = getUser(username);
 		
@@ -187,6 +205,12 @@ public class UserDao {
 		return user.getPassword();
 	}
 	
+	public Integer getUserId(String username) {
+		User user = getUser(username);
+		
+		return user.getUserId();
+	}
+	
 	/**
 	 * closes the connections
 	 * @param myConnection
@@ -205,8 +229,8 @@ public class UserDao {
 		catch(Exception exception) {
 			exception.printStackTrace();
 		}
-		
 	}
+	
 }
 
 /*public class UserDao {

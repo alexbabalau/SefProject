@@ -2,24 +2,22 @@ package model;
 
 public class Manager extends User{
 	
-	private String cinema;
-	
-	public Manager(String username, String password, String phone, String name, String email, String cinema) {
+	public Manager(String username, String password, String phone, String name, String email) {
 		super(username, password, phone, name, email);
-		this.cinema = cinema;
+	}
+	
+	public Manager(int id, String username, String password, String phone, String name, String email) {
+		super(id, username, password, phone, name, email);
 	}
 	
 	@Override
-	public String getCinema() {
-		// TODO Auto-generated method stub
-		return cinema;
+	public Integer getCinemaId() {
+		return 1;
 	}
-	
-	
 	
 	@Override
 	public String toString() {
-		return "Manager [cinema=" + cinema + ", getCinema()=" + getCinema() + ", getRole()=" + getRole()
+		return "Manager [cinema=" + 1 + ", getCinema()=" + getCinemaId() + ", getRole()=" + getRole()
 				+ ", getUsername()=" + getUsername() + ", getPassword()=" + getPassword() + ", getEmail()=" + getEmail()
 				+ ", getPhone()=" + getPhone() + ", getName()=" + getName() + "]";
 	}
@@ -27,6 +25,11 @@ public class Manager extends User{
 	@Override
 	public String getRole() {
 		return "manager";
+	}
+	
+	@Override
+	public boolean equals(Object o) {
+		return super.equals(o);
 	}
 
 }

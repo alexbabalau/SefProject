@@ -2,6 +2,8 @@ package service;
 
 import java.util.List;
 
+import javax.sql.DataSource;
+
 import dao.RequestDao;
 import dao.UserDao;
 import model.Manager;
@@ -13,15 +15,17 @@ public class RequestService {
 	private UserDao userDao;
 	
 	private static RequestService instance;
+	private DataSource dataSource;
 	
-	private RequestService() {
+	private RequestService(DataSource dataSource) {
+		this.dataSource = dataSource;
 		requestDao = RequestDao.getInstance();
-		userDao = UserDao.getInstance();
+		userDao = UserDao.getInstance(dataSource);
 	}
 	
-	public static RequestService getInstance() {
+	public static RequestService getInstance(DataSource dataSource) {
 		if(instance == null) {
-			instance = new RequestService();
+			instance = new RequestService(dataSource);
 		}
 		return instance;
 	}

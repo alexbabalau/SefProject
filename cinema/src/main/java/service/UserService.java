@@ -3,23 +3,28 @@ package service;
 import dao.PasswordUtils;
 import dao.UserDao;
 import model.Manager;
+import model.Regular;
 import model.User;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import javax.sql.DataSource;
 
 public class UserService {
 	
 	private UserDao userDao;
 	
 	private static UserService instance;
+	private DataSource dataSource;
 	
-	private UserService() {
-		userDao = UserDao.getInstance();
+	private UserService(DataSource theDataSource) {
+		dataSource = theDataSource;
+		userDao = UserDao.getInstance(theDataSource);
 	}
 	
-	public static UserService getInstance() {
+	public static UserService getInstance(DataSource theDataSource) {
 		if(instance == null) {
-			instance = new UserService();
+			instance = new UserService(theDataSource);
 		}
 		return instance;
 	}
@@ -39,11 +44,11 @@ public class UserService {
 	}
 	
 	public String getRole(String username) {
-		return userDao.selectByUsername(username).getRole();
+		return userDao.getUser(username).getRole();
 	}
 	
-	public String getCinema(String username) {
-		return userDao.selectByUsername(username).getCinema();
+	public Integer getCinemaId(String username) {
+		return userDao.getUser(username).getCinemaId();
 	}
 	
 	public List<Manager> getManagers(){
@@ -52,11 +57,21 @@ public class UserService {
 	}
 	
 	public User findUser(String username) {
-		return userDao.selectByUsername(username);
+		return userDao.getUser(username);
 	}
 	
 	public void close() {
-		userDao.close();
+		//userDao.close();
 		instance = null;
+	}
+	//--------------------------------------------------------------------------------------
+	public void addUserTest() {
+		User tempUser = new Regular("daria", "daria", "daria", "daria@yahoo.com", "07x3");
+		
+		this.addUser(tempUser, false);
+		
+		User fromDBUser = userDao.getUser("daria");
+		
+		System.out.println(fromDBUser.equals(tempUser));
 	}
 }
