@@ -19,7 +19,7 @@ public class MovieService {
 	
 	private MovieService(DataSource dataSource) {
 		movieDao = MovieDao.getInstance(dataSource);
-		bookingDao = BookingDao.getInstance();
+		bookingDao = BookingDao.getInstance(dataSource);
 	}
 	
 	public static MovieService getInstance(DataSource dataSource) {

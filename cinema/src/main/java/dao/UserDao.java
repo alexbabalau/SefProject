@@ -158,7 +158,32 @@ public class UserDao {
 			
 			while(iterator.hasNext()) {
 				User tempUser = iterator.next();
-				if(tempUser.getUsername().contentEquals(username))
+				if(tempUser.getUsername().equals(username))
+					return tempUser;
+			}
+			
+			return null;
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return null;
+	}
+	
+	public User getUserById(Integer id) {
+		List<User> users;
+		
+		try {
+			users = getUsers();
+			
+			Iterator<User> iterator = users.iterator();
+			
+			while(iterator.hasNext()) {
+				User tempUser = iterator.next();
+				Integer tempId = tempUser.getId();
+				
+				if(tempId.equals(id))
 					return tempUser;
 			}
 			

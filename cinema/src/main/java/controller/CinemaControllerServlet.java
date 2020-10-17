@@ -53,7 +53,7 @@ public class CinemaControllerServlet extends HttpServlet {
 		super.init();
 		userService = UserService.getInstance(dataSource);
 		movieService = MovieService.getInstance(dataSource);
-		bookingService = BookingService.getInstance();
+		//bookingService = BookingService.getInstance();
 		cinemaService = CinemaService.getInstance(dataSource);
 		
 		userService.addUserTest();
@@ -147,9 +147,10 @@ public class CinemaControllerServlet extends HttpServlet {
 		RequestDispatcher requestDispatcher = null;
 		
 		
-		Integer cinema = userService.getCinemaId(username);
+		Integer cinemaId = userService.getCinemaId(username);
+		String cinema = cinemaService.getCinemaName(cinemaId);
 		
-		List<Booking> bookingsFromCinema = bookingService.getBookingsFromCinema(cinemaId);
+		List<Booking> bookingsFromCinema = bookingService.getBookingsFromCinema(cinema);
 		
 		
 		request.setAttribute("movie_booking_and_user_list", bookingService.getMovieBookingAndUser(bookingsFromCinema));

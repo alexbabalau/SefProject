@@ -60,6 +60,18 @@ public class UserService {
 		return userDao.getUser(username);
 	}
 	
+	public Integer getUserId(String username) {
+		User user = userDao.getUser(username);
+		
+		return user.getId();
+	}
+	
+	public String getUsernameById(Integer id) {
+		User user = userDao.getUserById(id);
+		
+		return user.getUsername();
+	}
+	
 	public void close() {
 		//userDao.close();
 		instance = null;

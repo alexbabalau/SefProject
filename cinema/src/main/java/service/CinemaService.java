@@ -39,6 +39,12 @@ public class CinemaService {
 		return cinemaDao.getCinemaIdByName(name);
 	}
 	
+	public String getCinemaName(Integer id) {
+		Cinema cinema = cinemaDao.getCinema(id);
+		
+		return cinema.getName();
+	}
+	
 	public void close() {
 		instance = null;
 	}

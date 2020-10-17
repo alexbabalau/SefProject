@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import javax.sql.DataSource;
 
 import dao.BookingDao;
+import dao.CinemaDao;
 import dao.MovieDao;
 import dao.UserDao;
 import model.Booking;
@@ -17,18 +18,20 @@ public class BookingService {
 	private BookingDao bookingDao;
 	private MovieService movieService;
 	private UserDao userDao;
+	private CinemaDao cinemaDao;
 	private static BookingService instance;
 	private DataSource dataSource;
 	
-	private BookingService() {
-		bookingDao = BookingDao.getInstance();
+	private BookingService(DataSource dataSource) {
+		bookingDao = BookingDao.getInstance(dataSource);
 		movieService = MovieService.getInstance(dataSource);
 		userDao = UserDao.getInstance(dataSource);
+		cinemaDao = CinemaDao.getInstance(dataSource);
 	}
 	
-	public static BookingService getInstance() {
+	public static BookingService getInstance(DataSource dataSource) {
 		if(instance == null) {
-			instance = new BookingService();
+			instance = new BookingService(dataSource);
 		}
 		return instance;
 	}
@@ -68,7 +71,6 @@ public class BookingService {
 	
 	
 	public void close() {
-		bookingDao.close();
 		instance = null;
 	}
 
@@ -83,7 +85,9 @@ public class BookingService {
 	
 	public List<Booking> getBookingsFromCinema(String cinema){
 		List<Booking> bookings = getBookings();
-		return bookings.stream().filter(booking -> movieService.findMovie(booking.getMovieId()).getCinema().equals(cinema)).collect(Collectors.toList());
+		Integer cinemaId = cinemaDao.getCinemaIdByName(cinema);
+		
+		return bookings.stream().filter(booking -> Integer.valueOf(movieService.findMovie(booking.getMovieId()).getCinemaId()).equals(cinemaId)).collect(Collectors.toList());
 	}
 	
 	public List<MovieBookingAndUser> getMovieBookingAndUser(List<Booking> bookings){
