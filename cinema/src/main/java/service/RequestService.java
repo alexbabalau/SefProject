@@ -19,7 +19,7 @@ public class RequestService {
 	
 	private RequestService(DataSource dataSource) {
 		this.dataSource = dataSource;
-		requestDao = RequestDao.getInstance();
+		requestDao = RequestDao.getInstance(dataSource);
 		userDao = UserDao.getInstance(dataSource);
 	}
 	
@@ -45,7 +45,7 @@ public class RequestService {
 	}
 	
 	public void close() {
-		requestDao.close();
+		//requestDao.close();
 		instance = null;
 	}
 	
