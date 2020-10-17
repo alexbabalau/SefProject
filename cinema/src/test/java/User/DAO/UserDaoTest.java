@@ -3,6 +3,9 @@ package User.DAO;
 import static org.junit.Assert.assertEquals;
 
 import javax.annotation.Resource;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 
 import org.junit.jupiter.api.*;
 
@@ -16,11 +19,20 @@ public class UserDaoTest {
 	private UserService userService;
 	private UserDao userDao;
 	
-	@Resource(name="jdbc/cinema_tracker")
 	private DataSource dataSource;
 
 	@BeforeEach
 	public void setup() {
+		Context initContext;
+		try {
+			initContext = new InitialContext();
+			Context envContext  = (Context)initContext.lookup("java:/comp/env");
+			dataSource = (DataSource)envContext.lookup("jdbc/cinema_tracker");
+		} catch (NamingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		userService = UserService.getInstance(dataSource);
 		userDao = UserDao.getInstance(dataSource);
 	}

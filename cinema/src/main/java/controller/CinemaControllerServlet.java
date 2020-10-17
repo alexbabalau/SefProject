@@ -6,6 +6,9 @@ import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -34,7 +37,6 @@ import service.UserService;
 public class CinemaControllerServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
-	@Resource(name="jdbc/cinema_tracker")
 	private DataSource dataSource;
        
     /**
@@ -51,6 +53,17 @@ public class CinemaControllerServlet extends HttpServlet {
 	@Override
 	public void init() throws ServletException {
 		super.init();
+		
+		Context initContext;
+		try {
+			initContext = new InitialContext();
+			Context envContext  = (Context)initContext.lookup("java:/comp/env");
+			dataSource = (DataSource)envContext.lookup("jdbc/cinema_tracker");
+		} catch (NamingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		userService = UserService.getInstance(dataSource);
 		movieService = MovieService.getInstance(dataSource);
 		//bookingService = BookingService.getInstance();
