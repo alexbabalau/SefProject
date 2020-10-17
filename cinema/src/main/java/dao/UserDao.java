@@ -118,7 +118,7 @@ public class UserDao {
 			String username = user.getUsername();
 			
 			myStatement.setString(1, username);
-			myStatement.setString(2, user.getPassword());
+			myStatement.setString(2, password);
 			myStatement.setString(3, user.getName());
 			myStatement.setString(4, user.getEmail());
 			myStatement.setString(5, user.getPhone());

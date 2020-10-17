@@ -18,7 +18,7 @@ public class Regular extends User{
 	
 	@Override
 	public String getRole() {
-		return "regular";
+		return "r";
 	}
 	
 	@Override

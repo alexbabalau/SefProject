@@ -24,7 +24,7 @@ public class Manager extends User{
 
 	@Override
 	public String getRole() {
-		return "manager";
+		return "m";
 	}
 	
 	@Override

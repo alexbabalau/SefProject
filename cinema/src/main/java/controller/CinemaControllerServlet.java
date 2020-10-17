@@ -69,10 +69,7 @@ public class CinemaControllerServlet extends HttpServlet {
 		//bookingService = BookingService.getInstance();
 		cinemaService = CinemaService.getInstance(dataSource);
 		
-		userService.addUserTest();
-		
 		requestService = RequestService.getInstance(dataSource);
-		userService.addUser(new Admin("admin", "admin", "07xxxxxx", "Admin", "admin@admin.ro"), false);
 		
 		/*userService.addUser(new Manager("manager1", "manager1", "07xxxxx", "Manager1", "manager1@manager1.ro", "CineDaria"), false);
 		userService.addUser(new Manager("manager2", "manager2", "07xxxxx", "Manager2", "manager2@manager2.ro", "CineMax"), false);
