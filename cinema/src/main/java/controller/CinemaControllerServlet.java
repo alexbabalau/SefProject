@@ -66,10 +66,12 @@ public class CinemaControllerServlet extends HttpServlet {
 		
 		userService = UserService.getInstance(dataSource);
 		movieService = MovieService.getInstance(dataSource);
-		//bookingService = BookingService.getInstance();
+		bookingService = BookingService.getInstance(dataSource);
 		cinemaService = CinemaService.getInstance(dataSource);
 		
 		requestService = RequestService.getInstance(dataSource);
+		
+		//userService.addUser(new Admin("admin", "admin", "0748783908", "Admin", "admin@yahoo.com"), false);
 		
 		/*userService.addUser(new Manager("manager1", "manager1", "07xxxxx", "Manager1", "manager1@manager1.ro", "CineDaria"), false);
 		userService.addUser(new Manager("manager2", "manager2", "07xxxxx", "Manager2", "manager2@manager2.ro", "CineMax"), false);
@@ -181,10 +183,10 @@ public class CinemaControllerServlet extends HttpServlet {
 			getServletContext().setAttribute("username", request.getParameter("username"));
 			
 			switch(userService.getRole(username)) {
-				case "admin": request.setAttribute("manager_list", requestService.getRequests());
+				case "a": request.setAttribute("manager_list", requestService.getRequests());
 							  requestDispatcher = request.getRequestDispatcher("admin-requests.jsp");
 							  break;
-				case "manager" : request.setAttribute("movie_list", movieService.getMoviesFromCinema(userService.getCinemaId(username)));
+				case "m" : request.setAttribute("movie_list", movieService.getMoviesFromCinema(userService.getCinemaId(username)));
 								requestDispatcher = request.getRequestDispatcher("manager-movies.jsp");
 								break;
 				default:request.setAttribute("manager_list", userService.getManagers()); 
@@ -224,9 +226,9 @@ public class CinemaControllerServlet extends HttpServlet {
 
 		if (!userService.existUser(username)) {
 			switch(role) {
-				case "manager" : requestService.addRequest(new Manager(username, password, phone, name, email));
+				case "m" : requestService.addRequest(new Manager(username, password, phone, name, email));
 					break;
-				case "regular" : userService.addUser(new Regular(username, password, phone, name, email), false);
+				case "r" : userService.addUser(new Regular(username, password, phone, name, email), false);
 					break;		
 			}
 		}
@@ -443,10 +445,10 @@ public class CinemaControllerServlet extends HttpServlet {
 		String username = (String) (request.getServletContext().getAttribute("username"));
 		
 		switch(userService.getRole(username)) {
-			case "admin": request.setAttribute("manager_list", requestService.getRequests());
+			case "a": request.setAttribute("manager_list", requestService.getRequests());
 					  	requestDispatcher = request.getRequestDispatcher("admin-requests.jsp");
 					  	break;
-			case "manager" : request.setAttribute("movie_list", movieService.getMoviesFromCinema(userService.getCinemaId(username)));
+			case "m" : request.setAttribute("movie_list", movieService.getMoviesFromCinema(userService.getCinemaId(username)));
 							requestDispatcher = request.getRequestDispatcher("manager-movies.jsp");
 							break;
 			default:request.setAttribute("manager_list", userService.getManagers()); 
