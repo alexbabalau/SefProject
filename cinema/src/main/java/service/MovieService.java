@@ -30,9 +30,9 @@ public class MovieService {
 	}
 	
 	public void deleteMovie(Integer id, boolean forUpdate) {
-		movieDao.deleteMovie(id);
 		if(!forUpdate)
 			bookingDao.deleteByMovieId(id);
+		movieDao.deleteMovie(id);
 	}
 	
 	public List<Movie> getMovies(){
@@ -49,9 +49,8 @@ public class MovieService {
 	
 	public void addSeats(Integer id, int addSeats) {
 		Movie movie = movieDao.findMovie(id);
-		movieDao.deleteMovie(id);
 		movie.setFreeSeats(movie.getFreeSeats() + addSeats);
-		movieDao.addMovie(movie);
+		movieDao.updateMovie(id, movie);
 	}
 	
 	public List<Movie> getMoviesFromCinema(Integer cinemaId){
@@ -62,6 +61,10 @@ public class MovieService {
 	
 	public void updateMovie(Integer id, Movie movie) {
 		movieDao.updateMovie(id, movie);
+	}
+	
+	public Movie getMovieByTitle(String title) {
+		return movieDao.getMovieByTitle(title);
 	}
 	
 	public void close() {

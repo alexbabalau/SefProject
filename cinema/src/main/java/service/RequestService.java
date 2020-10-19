@@ -6,21 +6,26 @@ import javax.sql.DataSource;
 
 import dao.RequestDao;
 import dao.UserDao;
+import model.Cinema;
 import model.Manager;
+import model.Request;
 
 public class RequestService {
 	
 	private RequestDao requestDao;
-	
 	private UserDao userDao;
 	
 	private static RequestService instance;
+	private UserService userService;
+	private CinemaService cinemaService;
 	private DataSource dataSource;
 	
 	private RequestService(DataSource dataSource) {
 		this.dataSource = dataSource;
 		requestDao = RequestDao.getInstance(dataSource);
 		userDao = UserDao.getInstance(dataSource);
+		cinemaService = CinemaService.getInstance(dataSource);
+		userService = UserService.getInstance(dataSource);
 	}
 	
 	public static RequestService getInstance(DataSource dataSource) {
@@ -30,13 +35,17 @@ public class RequestService {
 		return instance;
 	}
 	
-	public void addRequest(Manager m) {
-		requestDao.addRequest(m);
+	public void addRequest(Manager m, String cinemaName) {
+		requestDao.addRequest(new Request(m, cinemaName));
 	}
 	
 	public void approveRequest(String username) {
-		Manager approvedManager = requestDao.findRequest(username);
-		userDao.addUser(approvedManager, true);
+		Request approvedRequest = requestDao.findRequest(username);
+		Manager approvedManager = approvedRequest.getManager();
+		userDao.addUser(approvedManager, false);
+		Integer idManager = userService.getUserId(username);
+		Cinema approvedCinema = new Cinema(idManager, approvedRequest.getCinemaName());
+		cinemaService.addCinema(approvedCinema);
 		requestDao.deleteRequest(username);
 	}
 	
@@ -49,7 +58,7 @@ public class RequestService {
 		instance = null;
 	}
 	
-	public List<Manager> getRequests(){
+	public List<Request> getRequests(){
 		return requestDao.getRequests();
 	}
 }

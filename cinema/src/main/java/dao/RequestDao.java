@@ -20,6 +20,7 @@ import org.json.simple.parser.ParseException;
 
 import model.Booking;
 import model.Manager;
+import model.Request;
 import model.User;
 import service.UserService;
 
@@ -40,15 +41,15 @@ public class RequestDao {
 		return instance;
 	}
 	
-	public List<Manager> getRequests() {
-		List<Manager> requests = new ArrayList<>();
+	public List<Request> getRequests() {
+		List<Request> requests = new ArrayList<>();
 		
 		Connection myConnection = null;
 		Statement myStatement = null;
 		ResultSet myResult = null;
 		
 		try {
-			Manager tempRequest = null;
+			Request tempRequest = null;
 			
 			myConnection = dataSource.getConnection();
 			myStatement = myConnection.createStatement();
@@ -64,8 +65,10 @@ public class RequestDao {
 				String phone = myResult.getString("phone");
 				String name = myResult.getString("name");
 				String email = myResult.getString("email");
+				String cinemaName = myResult.getString("cinema_name");
 				
-				tempRequest = new Manager(id, username, password, phone, name, email);
+				Manager tempManager = new Manager(username, password, phone, name, email);
+				tempRequest = new Request(id, tempManager, cinemaName);
 				
 				requests.add(tempRequest);
 			}
@@ -82,7 +85,7 @@ public class RequestDao {
 		return requests;
 	}
 	
-	public void addRequest(Manager request) {
+	public void addRequest(Request request) {
 		Connection myConnection = null;
 		PreparedStatement myStatement = null;
 		
@@ -90,16 +93,17 @@ public class RequestDao {
 			myConnection = dataSource.getConnection();
 			
 			String insertQuery = "insert into request"
-								+ "(username, password, name, email, phone)"
-								+ "values(?, ?, ?, ?, ?)";
+								+ "(username, password, name, email, phone, cinema_name)"
+								+ "values(?, ?, ?, ?, ?, ?)";
 
 			myStatement = myConnection.prepareStatement(insertQuery);
 
-			myStatement.setString(1, request.getUsername());
-			myStatement.setString(2, request.getPassword());
-			myStatement.setString(3, request.getName());
-			myStatement.setString(4, request.getEmail());
-			myStatement.setString(5, request.getPhone());
+			myStatement.setString(1, request.getManager().getUsername());
+			myStatement.setString(2, request.getManager().getPassword());
+			myStatement.setString(3, request.getManager().getName());
+			myStatement.setString(4, request.getManager().getEmail());
+			myStatement.setString(5, request.getManager().getPhone());
+			myStatement.setString(6, request.getCinemaName());
 
 			myStatement.execute();
 		}
@@ -119,11 +123,12 @@ public class RequestDao {
 		try {
 			myConnection = dataSource.getConnection();
 			
-			String deleteQuery = "delete from request where id_request=?";
+			String deleteQuery = "delete from request where id=?";
 			
 			myStatement = myConnection.prepareStatement(deleteQuery);
 			
-			Integer id = userService.getCinemaId(username);
+			Request toBeDeletedRequest = findRequest(username);
+			Integer id = toBeDeletedRequest.getId();
 			
 			myStatement.setInt(1, id);
 			
@@ -138,17 +143,17 @@ public class RequestDao {
 		}
 	}
 	
-	public Manager findRequest(String username) {
-		List<Manager> requests;
+	public Request findRequest(String username) {
+		List<Request> requests;
 		
 		try {
 			requests = getRequests();
 			
-			Iterator<Manager> iterator = requests.iterator();
+			Iterator<Request> iterator = requests.iterator();
 			
 			while(iterator.hasNext()) {
-				Manager tempRequest = iterator.next();
-				if(tempRequest.getUsername().equals(username))
+				Request tempRequest = iterator.next();
+				if(tempRequest.getManager().getUsername().equals(username))
 					return tempRequest;
 			}
 			

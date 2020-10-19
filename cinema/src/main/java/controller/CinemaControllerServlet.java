@@ -189,7 +189,7 @@ public class CinemaControllerServlet extends HttpServlet {
 				case "m" : request.setAttribute("movie_list", movieService.getMoviesFromCinema(userService.getCinemaId(username)));
 								requestDispatcher = request.getRequestDispatcher("manager-movies.jsp");
 								break;
-				default:request.setAttribute("manager_list", userService.getManagers()); 
+				default:request.setAttribute("cinema_list", cinemaService.getCinemas()); 
 						requestDispatcher = request.getRequestDispatcher("select-cinema.jsp");
 				
 			}
@@ -226,9 +226,9 @@ public class CinemaControllerServlet extends HttpServlet {
 
 		if (!userService.existUser(username)) {
 			switch(role) {
-				case "m" : requestService.addRequest(new Manager(username, password, phone, name, email));
+				case "manager" : requestService.addRequest(new Manager(username, password, phone, name, email), cinemaName);
 					break;
-				case "r" : userService.addUser(new Regular(username, password, phone, name, email), false);
+				case "regular" : userService.addUser(new Regular(username, password, phone, name, email), false);
 					break;		
 			}
 		}
@@ -324,8 +324,6 @@ public class CinemaControllerServlet extends HttpServlet {
 		Movie movie = movieService.findMovie(Integer.parseInt(id));
 		
 		request.setAttribute("movie", movie);
-		
-		movieService.deleteMovie(Integer.parseInt(id), true);
 		
 		requestDispatcher = request.getRequestDispatcher("movie-update-form.jsp");
 		

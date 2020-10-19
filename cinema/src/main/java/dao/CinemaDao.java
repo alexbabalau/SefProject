@@ -111,6 +111,22 @@ public class CinemaDao {
 		return null;
 	}
 	
+	public Cinema getCinemaByManagerId(Integer id) {
+		List<Cinema> allCinemas = getCinemas();
+		
+		Iterator<Cinema> iterator = allCinemas.iterator();
+		
+		while(iterator.hasNext()) {
+			Cinema cinema = iterator.next();
+			Integer tempId = cinema.getIdManager();
+			
+			if(tempId.equals(id))
+				return cinema;
+		}
+		
+		return null;
+	}
+	
 	public Integer getCinemaIdByName(String name) {
 		List<Cinema> allCinemas = getCinemas();
 		Integer id = null;

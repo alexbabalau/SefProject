@@ -129,11 +129,13 @@ public class UserDao {
 			
 			myStatement.execute();
 			
-			if("m".equals(role)) {
+			/*if("m".equals(role)) {
 				// add into cinema
 				Cinema newCinema = new Cinema(getUserId(username), "name");
 				cinemaDao.addCinema(newCinema);
+				
 			}
+			*/
 			
 		}
 		catch(Exception exception) {

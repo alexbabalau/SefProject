@@ -15,10 +15,12 @@ public class UserService {
 	private UserDao userDao;
 	
 	private static UserService instance;
+	private CinemaService cinemaService;
 	private DataSource dataSource;
 	
 	private UserService(DataSource theDataSource) {
 		dataSource = theDataSource;
+		cinemaService = CinemaService.getInstance(dataSource);
 		userDao = UserDao.getInstance(theDataSource);
 	}
 	
@@ -48,7 +50,7 @@ public class UserService {
 	}
 	
 	public Integer getCinemaId(String username) {
-		return userDao.getUser(username).getCinemaId();
+		return cinemaService.getCinemaIdByManagerId(getUserId(username));
 	}
 	
 	public List<Manager> getManagers(){

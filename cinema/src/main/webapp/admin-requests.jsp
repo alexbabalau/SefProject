@@ -37,24 +37,24 @@
     					</tr>
   					</thead>
 					<tbody>
-					<c:forEach var="tempManager" items="<%= request.getAttribute(\"manager_list\") %>"> 
+					<c:forEach var="tempRequest" items="<%= request.getAttribute(\"manager_list\") %>"> 
 					
 						<c:url var = "acceptLink" value = "CinemaControllerServlet">
 							<c:param name = "command" value = "ACCEPT"/>
-							<c:param name = "username" value = "${tempManager.username }"/>
+							<c:param name = "username" value = "${tempRequest.manager.username }"/>
 						</c:url>
 						
 						<c:url var = "denyLink" value = "CinemaControllerServlet">
 							<c:param name = "command" value = "DENY"/>
-							<c:param name = "username" value = "${tempManager.username }"/>
+							<c:param name = "username" value = "${tempRequest.manager.username }"/>
 						</c:url>
 				
 						<tr>
-							<td>${tempManager.username}</td>
-							<td>${tempManager.cinema}</td>
-							<td>${tempManager.name}</td>
-							<td>${tempManager.phone}</td>
-							<td>${tempManager.email}</td>
+							<td>${tempRequest.manager.username}</td>
+							<td>${tempRequest.cinemaName}</td>
+							<td>${tempRequest.manager.name}</td>
+							<td>${tempRequest.manager.phone}</td>
+							<td>${tempRequest.manager.email}</td>
 							<td> <a href = "${acceptLink}">Accept</a> </td>
 							<td> <a href = "${denyLink}">Deny</a> </td>
 						</tr>

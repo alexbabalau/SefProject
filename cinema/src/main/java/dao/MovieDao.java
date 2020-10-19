@@ -136,7 +136,6 @@ public class MovieDao {
 	}
 	
 	public void updateMovie(Integer id, Movie movie) {
-		Movie oldMovie = findMovie(id);
 		
 		Connection myConnection = null;
 		PreparedStatement myStatement = null;
@@ -144,8 +143,8 @@ public class MovieDao {
 		try {
 			myConnection = dataSource.getConnection();
 			
-			String updateQuery = "update movie" 
-								+ "set id_cinema=?, title=?, start_hour=?, end_hour=?, price=?, free_seats=?"
+			String updateQuery = "update movie " 
+								+ "set id_cinema=?, title=?, start_hour=?, end_hour=?, price=?, free_seats=? "
 								+ "where id_movie=?";
 			
 			myStatement = myConnection.prepareStatement(updateQuery);
@@ -156,7 +155,9 @@ public class MovieDao {
 			myStatement.setInt(4, movie.getEndHour());
 			myStatement.setDouble(5, movie.getPrice());
 			myStatement.setInt(6, movie.getFreeSeats());
-			myStatement.setInt(6, oldMovie.getId());
+			myStatement.setInt(7, id);
+			
+			System.out.println(myStatement.toString());
 			
 			myStatement.execute();
 		}
@@ -166,6 +167,26 @@ public class MovieDao {
 		finally {
 			close(myConnection, myStatement, null);
 		}
+	}
+	
+	public Movie getMovieByTitle(String title) {
+		Movie searchedMovie = null;
+		
+		List<Movie> allMovies = getMovies();
+		
+		Iterator<Movie> iterator = allMovies.iterator();
+		
+		while(iterator.hasNext()) {
+			Movie tempMovie = iterator.next();
+			String tempTitle = tempMovie.getTitle();
+			
+			if(title.equals(tempTitle)) {
+				searchedMovie = tempMovie;
+				break;
+			}	
+		}
+		
+		return searchedMovie;
 	}
 	
 	public Movie findMovie(Integer id) {

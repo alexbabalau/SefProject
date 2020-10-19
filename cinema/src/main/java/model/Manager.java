@@ -1,5 +1,7 @@
 package model;
 
+import service.CinemaService;
+
 public class Manager extends User{
 	
 	public Manager(String username, String password, String phone, String name, String email) {

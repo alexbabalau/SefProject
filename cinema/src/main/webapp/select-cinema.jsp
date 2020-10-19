@@ -39,8 +39,8 @@
 				
 					<select class="custom-select" name = "cinema">
 				
-						<c:forEach var="tempManager" items="<%= request.getAttribute(\"manager_list\") %>">
-							<option>${tempManager.cinema}</option>
+						<c:forEach var="tempCinema" items="<%= request.getAttribute(\"cinema_list\") %>">
+							<option>${tempCinema.name}</option>
 						</c:forEach>
   					
 					</select>
