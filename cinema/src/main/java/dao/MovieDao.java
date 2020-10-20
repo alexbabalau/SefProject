@@ -157,8 +157,6 @@ public class MovieDao {
 			myStatement.setInt(6, movie.getFreeSeats());
 			myStatement.setInt(7, id);
 			
-			System.out.println(myStatement.toString());
-			
 			myStatement.execute();
 		}
 		catch(Exception exception) {

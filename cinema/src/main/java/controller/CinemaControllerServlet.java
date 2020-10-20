@@ -205,7 +205,7 @@ public class CinemaControllerServlet extends HttpServlet {
 		String username = (String) getServletContext().getAttribute("username");
 		RequestDispatcher requestDispatcher = null;
 		
-		request.setAttribute("manager_list", userService.getManagers()); 
+		request.setAttribute("cinema_list", cinemaService.getCinemas()); 
 		requestDispatcher = request.getRequestDispatcher("select-cinema.jsp");
 				
 		requestDispatcher.forward(request, response);
@@ -391,7 +391,7 @@ public class CinemaControllerServlet extends HttpServlet {
 		try {
 			bookingService.addBooking(new Booking(username, id, places));
 			
-			request.setAttribute("manager_list", userService.getManagers());
+			request.setAttribute("cinema_list", cinemaService.getCinemas());
 			requestDispatcher = request.getRequestDispatcher("select-cinema.jsp");
 		}
 		
@@ -449,7 +449,7 @@ public class CinemaControllerServlet extends HttpServlet {
 			case "m" : request.setAttribute("movie_list", movieService.getMoviesFromCinema(userService.getCinemaId(username)));
 							requestDispatcher = request.getRequestDispatcher("manager-movies.jsp");
 							break;
-			default:request.setAttribute("manager_list", userService.getManagers()); 
+			default:request.setAttribute("cinema_list", cinemaService.getCinemas()); 
 					requestDispatcher = request.getRequestDispatcher("select-cinema.jsp");
 		
 		}
